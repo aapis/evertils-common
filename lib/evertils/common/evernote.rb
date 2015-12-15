@@ -15,7 +15,7 @@ module Evertils
         @evernote.store.listTags(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
       end
 
-      def notebook_by_name(name = command)
+      def notebook_by_name(name)
         output = {}
         notebooks.each do |notebook|
           if notebook.name == name.to_s.capitalize
@@ -106,7 +106,7 @@ module Evertils
         results.should_eval_to(false)
       end
 
-      def create_note(title = command.capitalize, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+      def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
         # final output
         output = {}
 
@@ -136,11 +136,7 @@ module Evertils
         our_note.content = n_body
         our_note.created = created_on if !created_on.nil?
 
-        if p_notebook_name.nil?
-          parent_notebook = notebook_by_name
-        else
-          parent_notebook = notebook_by_name(p_notebook_name)
-        end
+        parent_notebook = notebook_by_name(p_notebook_name)
         
         ## parent_notebook is optional; if omitted, default notebook is used
         if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
