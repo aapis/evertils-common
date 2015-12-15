@@ -1,4 +1,5 @@
 require 'evernote-thrift'
+require 'notifaction'
 require 'evertils/common/version'
 require 'evertils/common/evernote'
 

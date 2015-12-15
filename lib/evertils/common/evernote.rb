@@ -1,4 +1,6 @@
+require 'yaml'
 require 'evertils/common/authentication'
+require 'evertils/common/enml'
 
 module Evertils
   module Common
@@ -70,6 +72,56 @@ module Evertils
         output
       end
 
+      def create_stack_from(full_path)
+        if File.exists? full_path
+          conf = YAML::load(File.open(full_path))
+          required = %w(name children)
+          
+          if has_required_fields(conf, required)
+            if !conf["children"].nil?
+              conf["children"].each do |name|
+                create_notebook(name, conf["name"])
+              end
+            end
+          else
+            raise ArgumentError, 'Configuration file is missing some required fields'
+          end
+        else
+          raise ArgumentError, "File not found: #{full_path}"
+        end
+      end
+
+      def create_note_from(full_path)
+        if File.exists? full_path
+          conf = YAML::load(File.open(full_path))
+          required = %w(title body)
+
+          if has_required_fields(conf, required)
+            create_note(conf['title'], conf['body'], conf['parent'])
+          else
+            raise ArgumentError, 'Configuration file is missing some required fields'
+          end
+        else
+          raise ArgumentError, "File not found: #{full_path}"
+        end
+      end
+
+      def create_stack(name)
+        create_notebook(name)
+      end
+
+      def create_notebook(name, stack = nil)
+        notebook = ::Evernote::EDAM::Type::Notebook.new
+        notebook.name = name
+        
+        if !stack.nil?
+          notebook.stack = stack
+          notebook.name = "#{stack}/#{name}"
+        end
+
+        @evernote.store.createNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, notebook)
+      end
+
       def find_note(title_filter = nil, notebook_filter = nil)
         filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
         filter.words = "intitle:#{title_filter}" if title_filter
@@ -122,7 +174,7 @@ module Evertils
 
         # a file was requested, lets prepare it for storage
         if !file.nil?
-          media_resource = EvernoteENML.new(file)
+          media_resource = ENML.new(file)
           body.concat(media_resource.embeddable_element)
           our_note.resources << media_resource.element
         end
@@ -170,6 +222,14 @@ module Evertils
         end
 
         output
+      end
+
+      private
+
+      def has_required_fields(hash, required)        
+        hash.keys.each do |key|
+          required.include? key
+        end
       end
     end
   end
