@@ -1,4 +1,5 @@
 require 'evertils/common/authentication'
+require 'evertils/common/enml'
 
 module Evertils
   module Common
@@ -122,7 +123,7 @@ module Evertils
 
         # a file was requested, lets prepare it for storage
         if !file.nil?
-          media_resource = EvernoteENML.new(file)
+          media_resource = ENML.new(file)
           body.concat(media_resource.embeddable_element)
           our_note.resources << media_resource.element
         end
