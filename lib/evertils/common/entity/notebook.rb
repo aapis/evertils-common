@@ -16,11 +16,12 @@ module Evertils
           notebooks = Notebooks.new.all
 
           notebooks.each do |notebook|
-            if notebook.name == name.to_s.capitalize
+            if notebook.name == name.to_s
               @notebook = notebook
-              return @notebook
             end
           end
+
+          @notebook
         end
 
         def create(name, stack = nil)
@@ -35,8 +36,10 @@ module Evertils
           @evernote.createNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, notebook)
         end
 
-        def destroy()
+        def expunge(name)
+          nb = find(name)
 
+          @evernote.expungeNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, nb.guid)
         end
 
         def notes(guid = nil)

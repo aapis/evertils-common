@@ -29,8 +29,10 @@ module Evertils
           @evernote.createTag(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, tag)
         end
 
-        def destroy(name)
+        def expunge(name)
+          tag = find(name)
 
+          @evernote.expungeTag(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, tag.guid)
         end
 
       end

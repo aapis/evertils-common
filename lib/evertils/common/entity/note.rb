@@ -106,6 +106,12 @@ module Evertils
           @evernote.deleteNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note)
         end
 
+        def expunge(name)
+          note = find(name).guid
+
+          @evernote.expungeNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note)
+        end
+
         def find(name)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = name
