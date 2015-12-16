@@ -1,8 +1,8 @@
 require 'yaml'
 require 'evertils/common/enml'
 require 'evertils/common/results_helper'
-require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notebook'
+require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notes'
 require 'evertils/common/entity/note'
 
@@ -30,8 +30,8 @@ module Evertils
       end
 
       def create_stack_from(full_path)
-        nb = Entity::Notebook.new
-        nb.create_from_yml(full_path)
+        stack = Entity::Stack.new
+        stack.create_from_yml(full_path)
       end
 
       def create_note_from(full_path)
