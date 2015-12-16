@@ -1,16 +1,16 @@
 require 'yaml'
-require 'evertils/common/authentication'
 require 'evertils/common/enml'
+require 'evertils/common/entity/notebooks'
+require 'evertils/common/entity/notebook'
+require 'evertils/common/entity/stack'
+require 'evertils/common/entity/notes'
+require 'evertils/common/entity/note'
 
 module Evertils
   module Common
     class Evernote
-      def initialize
-        @evernote = Evertils::Common::Authentication.new
-      end
-
       def notebooks
-        @evernote.store.listNotebooks(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        Notebooks.new.all
       end
 
       def tags
@@ -18,124 +18,56 @@ module Evertils
       end
 
       def notebook_by_name(name)
-        output = {}
-        notebooks.each do |notebook|
-          if notebook.name == name.to_s.capitalize
-            output = notebook
-          end
-        end
-        
-        output
+        nb = Entity::Notebook.new
+        nb.find(name)
       end
 
       def notes_by_notebook(name)
-        output = {}
-        notebooks.each do |notebook|
-          if notebook.name.to_s == name.capitalize.to_s
-            filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-            filter.notebookGuid = notebook.guid
-
-            result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-            result.includeTitle = true
-            result.includeUpdated = true
-            result.includeTagGuids = true
-
-            #output = @evernote.store.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 400, result)
-            notes(nil, notebook.guid).notes.each do |note|
-              output[note.guid] = @evernote.store.getNoteContent(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note.guid)
-            end
-          end
-        end
-
-        output
+        nb = Entity::Notebook.new
+        nb.find(name)
+        nb.notes
       end
 
-      def notebooks_by_stack(stack)
-        output = {}
-        notebooks.each do |notebook|
-          if notebook.stack == stack
-            #output[notebook.name] = []
+      # def notebooks_by_stack(stack)
+      #   output = {}
+      #   notebooks.each do |notebook|
+      #     if notebook.stack == stack
+      #       #output[notebook.name] = []
 
-            filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-            filter.notebookGuid = notebook.guid
+      #       filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+      #       filter.notebookGuid = notebook.guid
 
-            result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-            result.includeTitle = true
-            result.includeUpdated = true
-            result.includeTagGuids = true
+      #       result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+      #       result.includeTitle = true
+      #       result.includeUpdated = true
+      #       result.includeTagGuids = true
 
-            notes = @evernote.store.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 400, result)
-            output[notebook.name] = notes
-          end
-        end
+      #       notes = @evernote.store.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 400, result)
+      #       output[notebook.name] = notes
+      #     end
+      #   end
         
-        output
-      end
+      #   output
+      # end
 
       def create_stack_from(full_path)
-        if File.exists? full_path
-          conf = YAML::load(File.open(full_path))
-          required = %w(name children)
-          
-          if has_required_fields(conf, required)
-            if !conf["children"].nil?
-              conf["children"].each do |name|
-                create_notebook(name, conf["name"])
-              end
-            end
-          else
-            raise ArgumentError, 'Configuration file is missing some required fields'
-          end
-        else
-          raise ArgumentError, "File not found: #{full_path}"
-        end
+        nb = Entity::Notebook.new
+        nb.create_stack(full_path)
       end
 
       def create_note_from(full_path)
-        if File.exists? full_path
-          conf = YAML::load(File.open(full_path))
-          required = %w(title body)
-
-          if has_required_fields(conf, required)
-            create_note(conf['title'], conf['body'], conf['parent'])
-          else
-            raise ArgumentError, 'Configuration file is missing some required fields'
-          end
-        else
-          raise ArgumentError, "File not found: #{full_path}"
-        end
-      end
-
-      def create_stack(name)
-        create_notebook(name)
+        note = Entity::Note.new
+        note.create_from_yml(full_path)
       end
 
       def create_notebook(name, stack = nil)
-        notebook = ::Evernote::EDAM::Type::Notebook.new
-        notebook.name = name
-        
-        if !stack.nil?
-          notebook.stack = stack
-          notebook.name = "#{stack}/#{name}"
-        end
-
-        @evernote.store.createNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, notebook)
+        nb = Entity::Notebook.new
+        nb.create(name, stack)
       end
 
       def find_note(title_filter = nil, notebook_filter = nil)
-        filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-        filter.words = "intitle:#{title_filter}" if title_filter
-        filter.notebookGuid = notebook_filter if notebook_filter
-
-        @evernote.store.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 1)
-      end
-
-      def notes(title_filter = nil, notebook_filter = nil)
-        filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-        filter.words = "intitle:#{title_filter}" if title_filter
-        filter.notebookGuid = notebook_filter if notebook_filter
-
-        @evernote.store.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 300)
+        note = Entity::Note.new
+        note.find(title_filter, notebook_filter)
       end
 
       def note_exists(requested_date = DateTime.now)
@@ -159,74 +91,13 @@ module Evertils
       end
 
       def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
-        # final output
-        output = {}
-
-        # Create note object
-        our_note = ::Evernote::EDAM::Type::Note.new
-        our_note.resources = []
-        our_note.tagNames = []
-
-        # only join when required
-        if body.is_a? Array
-          body = body.join
-        end
-
-        # a file was requested, lets prepare it for storage
-        if !file.nil?
-          media_resource = ENML.new(file)
-          body.concat(media_resource.embeddable_element)
-          our_note.resources << media_resource.element
-        end
-
-        n_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        n_body += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
-        n_body += "<en-note>#{body}</en-note>"
-       
-        # setup note properties
-        our_note.title = title
-        our_note.content = n_body
-        our_note.created = created_on if !created_on.nil?
-
-        parent_notebook = notebook_by_name(p_notebook_name)
-        
-        ## parent_notebook is optional; if omitted, default notebook is used
-        if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
-          our_note.notebookGuid = parent_notebook.guid
-        end
-
-        ## Attempt to create note in Evernote account
-        begin
-          output[:note] = @evernote.store.createNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, our_note)
-          
-          if share_note
-            shareKey = @evernote.store.shareNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, output[:note].guid)
-            output[:share_url] = "https://#{Evertils::Common::EVERNOTE_HOST}/shard/#{@model.shardId}/sh/#{output[:note].guid}/#{shareKey}"
-          end
-        rescue ::Evernote::EDAM::Error::EDAMUserException => edue
-          ## Something was wrong with the note data
-          ## See EDAMErrorCode enumeration for error code explanation
-          ## http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
-          Notify.error "EDAMUserException: #{edue}\nCode #{edue.errorCode}: #{edue.parameter}"
-        rescue ::Evernote::EDAM::Error::EDAMNotFoundException => ednfe
-          ## Parent Notebook GUID doesn't correspond to an actual notebook
-          Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
-        end
-
-        # A parent notebook object exists, otherwise it was saved to the default
-        # notebook
-        if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
-          Notify.success("#{parent_notebook.stack}/#{parent_notebook.name}/#{our_note.title} created")
-        else
-          Notify.success("DEFAULT_NOTEBOOK/#{our_note.title} created")
-        end
-
-        output
+        note = Note.new
+        note.create(title, body, p_notebook_name, file, share_note, created_on)
       end
 
       private
 
-      def has_required_fields(hash, required)        
+      def has_required_fields(hash, required)
         hash.keys.each do |key|
           required.include? key
         end
