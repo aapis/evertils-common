@@ -101,7 +101,25 @@ module Evertils
         end
 
         def destroy(name)
+          note = find(name).guid
 
+          @evernote.deleteNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note)
+        end
+
+        def find(name)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = name
+
+          result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          result.includeTitle = true
+          result.includeUpdated = true
+          result.includeTagGuids = true
+
+          result = @evernote.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 1, result)
+
+          if result.totalNotes == 1
+            result.notes[0]
+          end
         end
 
         private
