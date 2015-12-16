@@ -18,10 +18,9 @@ module Evertils
           notebooks.each do |notebook|
             if notebook.name == name.to_s.capitalize
               @notebook = notebook
+              return @notebook
             end
           end
-          
-          @notebook
         end
 
         def create(name, stack = nil)
@@ -44,11 +43,6 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.notebookGuid = @notebook.guid
 
-          result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          result.includeTitle = true
-          result.includeUpdated = true
-          result.includeTagGuids = true
-          
           notes = Notes.new
           notes.find(nil, @notebook.guid)
         end
