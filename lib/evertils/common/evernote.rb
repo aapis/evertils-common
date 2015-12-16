@@ -10,7 +10,7 @@ module Evertils
   module Common
     class Evernote
       def notebooks
-        Notebooks.new.all
+        Entity::Notebooks.new.all
       end
 
       def tags
@@ -28,31 +28,9 @@ module Evertils
         nb.notes
       end
 
-      # def notebooks_by_stack(stack)
-      #   output = {}
-      #   notebooks.each do |notebook|
-      #     if notebook.stack == stack
-      #       #output[notebook.name] = []
-
-      #       filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-      #       filter.notebookGuid = notebook.guid
-
-      #       result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-      #       result.includeTitle = true
-      #       result.includeUpdated = true
-      #       result.includeTagGuids = true
-
-      #       notes = @evernote.store.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 400, result)
-      #       output[notebook.name] = notes
-      #     end
-      #   end
-        
-      #   output
-      # end
-
       def create_stack_from(full_path)
-        nb = Entity::Notebook.new
-        nb.create_stack(full_path)
+        nb = Entity::Stack.new
+        nb.create_from_yml(full_path)
       end
 
       def create_note_from(full_path)
@@ -71,23 +49,8 @@ module Evertils
       end
 
       def note_exists(requested_date = DateTime.now)
-        results = Helper::Results.new
-        tmpl = date_templates(requested_date)
-        template = tmpl[command]
-        note = find_note(template)
-
-        # Evernote's search matches things like the following, so we have to get
-        # more specific
-        #   Daily Log [July 3 - F] == Daily Log [July 10 - F]
-        if note.totalNotes > 0
-          note.notes.each do |n|
-            results.add(n.title != template)
-          end
-        else
-          results.add(true)
-        end
-
-        results.should_eval_to(false)
+        note = Note.new
+        note.exists? nil, requested_date
       end
 
       def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)

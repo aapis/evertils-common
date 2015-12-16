@@ -102,6 +102,26 @@ module Evertils
           output
         end
 
+        def exists?(name, requested_date = DateTime.now)
+          results = Helper::Results.new
+          tmpl = date_templates(requested_date)
+          template = tmpl[command]
+          note = find_note(template)
+
+          # Evernote's search matches things like the following, so we have to get
+          # more specific
+          #   Daily Log [July 3 - F] == Daily Log [July 10 - F]
+          if note.totalNotes > 0
+            note.notes.each do |n|
+              results.add(n.title != template)
+            end
+          else
+            results.add(true)
+          end
+
+          results.should_eval_to(false)
+        end
+
         def destroy(name)
 
         end
