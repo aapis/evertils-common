@@ -5,6 +5,8 @@ require 'evertils/common/entity/notebook'
 require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notes'
 require 'evertils/common/entity/note'
+require 'evertils/common/entity/tag'
+require 'evertils/common/entity/tags'
 
 module Evertils
   module Common
@@ -15,7 +17,8 @@ module Evertils
       end
 
       def tags
-        @evernote.store.listTags(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        tags = Entity::Tags.new
+        tags.all
       end
 
       def notebook_by_name(name)
@@ -37,6 +40,11 @@ module Evertils
       def create_note_from(full_path)
         note = Entity::Note.new
         note.create_from_yml(full_path)
+      end
+
+      def create_notebook_from(full_path)
+        nb = Entity::Notebook.new
+        nb.create_from_yml(full_path)
       end
 
       def create_notebook(name, stack = nil)
