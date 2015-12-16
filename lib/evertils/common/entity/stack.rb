@@ -11,10 +11,6 @@ module Evertils
           self
         end
 
-        def all
-          @evernote.listNotebooks(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
-        end
-
         def create_from_yml(full_path)
           begin
             nb = Notebook.new
