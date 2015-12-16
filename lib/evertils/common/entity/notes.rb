@@ -11,24 +11,20 @@ module Evertils
           self
         end
 
-        def all
-          @evernote.listNotebooks(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
-        end
-
-        def by_notebook(notebook)
-
-        end
-
-        def by_stack(stack)
-
-        end
-
-        def find(title, notebook)
+        def findAll(title, notebook = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
 
           @evernote.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 300)
+        end
+
+        def findOne(title, notebook = nil)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "intitle:#{title}" if title
+          filter.notebookGuid = notebook if notebook
+
+          @evernote.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 1)
         end
 
       end

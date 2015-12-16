@@ -1,14 +1,15 @@
 require 'yaml'
 require 'evertils/common/enml'
+require 'evertils/common/results_helper'
 require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notebook'
-require 'evertils/common/entity/stack'
 require 'evertils/common/entity/notes'
 require 'evertils/common/entity/note'
 
 module Evertils
   module Common
     class Evernote
+
       def notebooks
         Entity::Notebooks.new.all
       end
@@ -29,7 +30,7 @@ module Evertils
       end
 
       def create_stack_from(full_path)
-        nb = Entity::Stack.new
+        nb = Entity::Notebook.new
         nb.create_from_yml(full_path)
       end
 
@@ -58,13 +59,6 @@ module Evertils
         note.create(title, body, p_notebook_name, file, share_note, created_on)
       end
 
-      private
-
-      def has_required_fields(hash, required)
-        hash.keys.each do |key|
-          required.include? key
-        end
-      end
     end
   end
 end

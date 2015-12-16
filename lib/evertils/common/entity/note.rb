@@ -9,31 +9,23 @@ module Evertils
           @evernote = Authentication.new.store
         end
 
-        def find(title, notebook)
-          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "intitle:#{title}" if title
-          filter.notebookGuid = notebook if notebook
-
-          @evernote.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 1)
-        end
-
         def create_from_yml(full_path)
-          if File.exists? full_path
-            conf = YAML::load(File.open(full_path))
-            required = %w(title body)
+          begin
+            if File.exists? full_path
+              conf = YAML::load(File.open(full_path))
+              required = %w(title body)
 
-            if has_required_fields(conf, required)
-              create_note(conf['title'], conf['body'], conf['parent'])
+              if has_required_fields(conf, required)
+                create(conf['title'], conf['body'], conf['parent'])
+              else
+                raise ArgumentError, 'Configuration file is missing some required fields'
+              end
             else
-              raise ArgumentError, 'Configuration file is missing some required fields'
+              raise ArgumentError, "File not found: #{full_path}"
             end
-          else
-            raise ArgumentError, "File not found: #{full_path}"
+          rescue ArgumentError => e
+            puts e.message
           end
-        end
-
-        def create_from_yml(full_path)
-
         end
 
         def create(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
@@ -66,7 +58,8 @@ module Evertils
           our_note.content = n_body
           our_note.created = created_on if !created_on.nil?
 
-          parent_notebook = notebook_by_name(p_notebook_name)
+          nb = Entity::Notebook.new
+          parent_notebook = nb.find(p_notebook_name)
           
           ## parent_notebook is optional; if omitted, default notebook is used
           if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
@@ -75,10 +68,10 @@ module Evertils
 
           ## Attempt to create note in Evernote account
           begin
-            output[:note] = @evernote.store.createNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, our_note)
+            output[:note] = @evernote.createNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, our_note)
             
             if share_note
-              shareKey = @evernote.store.shareNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, output[:note].guid)
+              shareKey = @evernote.shareNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, output[:note].guid)
               output[:share_url] = "https://#{Evertils::Common::EVERNOTE_HOST}/shard/#{@model.shardId}/sh/#{output[:note].guid}/#{shareKey}"
             end
           rescue ::Evernote::EDAM::Error::EDAMUserException => edue
@@ -102,28 +95,21 @@ module Evertils
           output
         end
 
-        def exists?(name, requested_date = DateTime.now)
-          results = Helper::Results.new
-          tmpl = date_templates(requested_date)
-          template = tmpl[command]
-          note = find_note(template)
-
-          # Evernote's search matches things like the following, so we have to get
-          # more specific
-          #   Daily Log [July 3 - F] == Daily Log [July 10 - F]
-          if note.totalNotes > 0
-            note.notes.each do |n|
-              results.add(n.title != template)
-            end
-          else
-            results.add(true)
-          end
-
-          results.should_eval_to(false)
+        def exists?(name)
+          notes = Notes.new
+          notes.findAll(name).totalNotes > 0
         end
 
         def destroy(name)
 
+        end
+
+        private
+
+        def has_required_fields(hash, required)
+          hash.keys.each do |key|
+            required.include? key
+          end
         end
 
       end
