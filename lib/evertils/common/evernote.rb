@@ -50,12 +50,12 @@ module Evertils
       end
 
       def note_exists(requested_date = DateTime.now)
-        note = Note.new
+        note = Entity::Note.new
         note.exists? nil, requested_date
       end
 
       def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
-        note = Note.new
+        note = Entity::Note.new
         note.create(title, body, p_notebook_name, file, share_note, created_on)
       end
 
