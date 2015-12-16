@@ -42,8 +42,8 @@ module Evertils
         note.create_from_yml(full_path)
       end
 
-      def create_notebook_from(full_path)
-        nb = Entity::Notebook.new
+      def create_notebooks_from(full_path)
+        nb = Entity::Notebooks.new
         nb.create_from_yml(full_path)
       end
 
