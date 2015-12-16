@@ -33,7 +33,7 @@ module Evertils
               if has_required_fields(conf, required)
                 if !conf["children"].nil?
                   conf["children"].each do |name|
-                    create(name)
+                    create(name, conf["name"])
                   end
                 end
               else
@@ -55,7 +55,7 @@ module Evertils
             notebook.stack = stack
             notebook.name = "#{stack}/#{name}"
           end
-
+          
           @evernote.createNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, notebook)
         end
 
@@ -74,6 +74,14 @@ module Evertils
           
           notes = Notes.new
           notes.find(nil, @notebook.guid)
+        end
+
+        private
+
+        def has_required_fields(hash, required)
+          hash.keys.each do |key|
+            required.include? key
+          end
         end
 
       end
