@@ -49,9 +49,9 @@ module Evertils
         note.find(title_filter, notebook_filter)
       end
 
-      def note_exists(requested_date = DateTime.now)
+      def note_exists(name)
         note = Entity::Note.new
-        note.exists? nil, requested_date
+        note.exists? name
       end
 
       def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
