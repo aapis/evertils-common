@@ -12,6 +12,7 @@ module Evertils
         end
 
         def find(name)
+          @tag = nil
           tags = Tags.new.all
 
           tags.each do |tag|

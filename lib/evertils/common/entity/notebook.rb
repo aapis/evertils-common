@@ -13,6 +13,7 @@ module Evertils
         end
 
         def find(name)
+          @notebook = nil
           notebooks = Notebooks.new.all
 
           notebooks.each do |notebook|
