@@ -4,6 +4,7 @@ require 'evertils/common/entity/notes'
 require 'evertils/common/entity/note'
 require 'evertils/common/entity/tag'
 require 'evertils/common/entity/tags'
+require 'evertils/common/entity/sync'
 
 module Evertils
   module Common
@@ -62,6 +63,23 @@ module Evertils
         def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
           note = Entity::Note.new
           note.create(title, body, p_notebook_name, file, share_note, created_on)
+        end
+
+        def destroy_note(name)
+          note = Entity::Note.new
+          note.find(name)
+          note.expunge(name)
+        end
+
+        def poll
+          begin
+            sync = Entity::Sync.new
+            sync.state
+          rescue Evernote::EDAM::Error::EDAMSystemException => e
+            if e.errorCode == 19
+              puts "You're rate limited, wait #{e.rateLimitDuration}s"
+            end
+          end
         end
 
       end
