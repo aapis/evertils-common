@@ -12,7 +12,10 @@ module Evertils
       class Backup
 
         def files(*files)
+          date = DateTime.now
+          note = Entity::Note.new
 
+          note.create("Backup: #{date.to_s}", '', 'Backup', files)
         end
 
       end
