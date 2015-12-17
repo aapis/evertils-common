@@ -16,10 +16,11 @@ module Evertils
 
           tags.each do |tag|
             if tag.name == name.to_s
-              return tag
+              @tag = tag
             end
           end
 
+          @tag
         end
 
         def create(name)
