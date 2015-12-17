@@ -2,6 +2,7 @@ require 'evernote-thrift'
 require 'notifaction'
 require 'yaml'
 require 'evertils/common/enml'
+require 'evertils/common/entity'
 require 'evertils/common/version'
 require 'evertils/common/queries/simple'
 

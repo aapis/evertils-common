@@ -1,15 +1,7 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
-      class Notes
-        
-        def initialize
-          @evernote = Authentication.new.store
-
-          self
-        end
+      class Notes < Entity::Base
 
         def findAll(title, notebook = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new

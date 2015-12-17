@@ -1,15 +1,7 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
-      class Tag
-        
-        def initialize
-          @evernote = Authentication.new.store
-
-          self
-        end
+      class Tag < Entity::Base
 
         def find(name)
           @tag = nil

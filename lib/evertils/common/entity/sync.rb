@@ -1,18 +1,10 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
-      class Sync
-        
-        def initialize
-          @evernote = Authentication.new.store
-
-          self
-        end
+      class Sync < Entity::Base
 
         def state
-          @evernote.getSyncState()
+          @evernote.getSyncState(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
         end
 
       end

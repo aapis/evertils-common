@@ -1,15 +1,7 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
-      class Notebooks
-        
-        def initialize
-          @evernote = Authentication.new.store
-
-          self
-        end
+      class Notebooks < Entity::Base
 
         def all
           @evernote.listNotebooks(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
@@ -37,14 +29,6 @@ module Evertils
             end
           rescue ArgumentError => e
             puts e.message
-          end
-        end
-
-        private
-
-        def has_required_fields(hash, required)
-          hash.keys.each do |key|
-            required.include? key
           end
         end
 

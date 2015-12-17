@@ -1,16 +1,9 @@
-require 'evertils/common/authentication'
 require 'evertils/common/entity/notebooks'
 
 module Evertils
   module Common
     module Entity
-      class Notebook
-
-        def initialize
-          @evernote = Authentication.new.store
-
-          self
-        end
+      class Notebook < Entity::Base
 
         def find(name)
           @notebook = nil
@@ -49,14 +42,6 @@ module Evertils
 
           notes = Notes.new
           notes.find(nil, @notebook.guid)
-        end
-
-        private
-
-        def has_required_fields(hash, required)
-          hash.keys.each do |key|
-            required.include? key
-          end
         end
 
       end
