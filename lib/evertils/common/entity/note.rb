@@ -60,6 +60,10 @@ module Evertils
 
           nb = Entity::Notebook.new
           parent_notebook = nb.find(p_notebook_name)
+
+          if parent_notebook.nil?
+            parent_notebook = @evernote.getDefaultNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          end
           
           ## parent_notebook is optional; if omitted, default notebook is used
           if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
