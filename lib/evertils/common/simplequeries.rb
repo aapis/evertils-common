@@ -1,6 +1,5 @@
 require 'yaml'
 require 'evertils/common/enml'
-require 'evertils/common/results_helper'
 require 'evertils/common/entity/notebook'
 require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notes'
