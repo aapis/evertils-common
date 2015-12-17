@@ -123,7 +123,7 @@ module Evertils
 
           result = @evernote.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 1, result)
 
-          if result.totalNotes == 1
+          if result.totalNotes > 0
             result.notes[0]
           end
         end
