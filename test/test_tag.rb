@@ -12,5 +12,13 @@ class TagTest < Minitest::Test
     tag = Evertils::Common::Entity::Tag.new
 
     assert_nil tag.find('invalid_tag_name')
-    end
+  end
+
+  def test_tag_create
+    tag = Evertils::Common::Entity::Tag.new
+
+    date = DateTime.now.to_s
+    assert tag.create(date).is_a? Evernote::EDAM::Type::Tag
+    assert tag.expunge(date)
+  end
 end

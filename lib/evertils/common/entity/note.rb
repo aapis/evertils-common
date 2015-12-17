@@ -1,13 +1,7 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
-      class Note
-
-        def initialize
-          @evernote = Authentication.new.store
-        end
+      class Note < Entity::Base
 
         def create_from_yml(full_path)
           begin
@@ -38,9 +32,7 @@ module Evertils
           our_note.tagNames = []
 
           # only join when required
-          if body.is_a? Array
-            body = body.join
-          end
+          body = body.join if body.is_a? Array
 
           # a file was requested, lets prepare it for storage
           if !file.nil?
@@ -60,22 +52,17 @@ module Evertils
 
           nb = Entity::Notebook.new
           parent_notebook = nb.find(p_notebook_name)
-
-          if parent_notebook.nil?
-            parent_notebook = @evernote.getDefaultNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
-          end
+          parent_notebook = @evernote.call(:getDefaultNotebook) if parent_notebook.nil?
           
-          ## parent_notebook is optional; if omitted, default notebook is used
-          if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
-            our_note.notebookGuid = parent_notebook.guid
-          end
+          # parent_notebook is optional; if omitted, default notebook is used
+          our_note.notebookGuid = parent_notebook.guid if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
 
-          ## Attempt to create note in Evernote account
+          # Attempt to create note in Evernote account
           begin
-            output[:note] = @evernote.createNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, our_note)
+            output[:note] = @evernote.call(:createNote, our_note)
             
             if share_note
-              shareKey = @evernote.shareNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, output[:note].guid)
+              shareKey = @evernote.call(:shareNote, output[:note].guid)
               output[:share_url] = "https://#{Evertils::Common::EVERNOTE_HOST}/shard/#{@model.shardId}/sh/#{output[:note].guid}/#{shareKey}"
             end
           rescue ::Evernote::EDAM::Error::EDAMUserException => edue
@@ -88,13 +75,7 @@ module Evertils
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
           end
 
-          # A parent notebook object exists, otherwise it was saved to the default
-          # notebook
-          if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
-            Notify.success("#{parent_notebook.stack}/#{parent_notebook.name}/#{our_note.title} created")
-          else
-            Notify.success("DEFAULT_NOTEBOOK/#{our_note.title} created")
-          end
+          Notify.success("#{parent_notebook.stack}/#{parent_notebook.name}/#{our_note.title} created")
 
           output
         end
@@ -107,36 +88,28 @@ module Evertils
         def destroy(name)
           note = find(name).guid
 
-          @evernote.deleteNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note)
+          @evernote.call(:deleteNote, note)
         end
 
         def expunge(name)
           note = find(name).guid
 
-          @evernote.expungeNote(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, note)
+          @evernote.call(:expungeNote, note)
         end
 
         def find(name)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = name
 
-          result = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          result.includeTitle = true
-          result.includeUpdated = true
-          result.includeTagGuids = true
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeTagGuids = true
 
-          result = @evernote.findNotesMetadata(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, 0, 1, result)
+          result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
           if result.totalNotes > 0
             result.notes[0]
-          end
-        end
-
-        private
-
-        def has_required_fields(hash, required)
-          hash.keys.each do |key|
-            required.include? key
           end
         end
 
