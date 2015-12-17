@@ -5,7 +5,7 @@ class NotebookTest < Minitest::Test
     def test_notebook_found
         entity = Evertils::Common::Entity::Notebook.new
 
-        assert entity.find('Programming')
+        assert entity.find('Evertils')
     end
 
     def test_notebook_not_found

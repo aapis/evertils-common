@@ -5,7 +5,7 @@ class NotesTest < Minitest::Test
     def test_notes
         entities = Evertils::Common::Entity::Notes.new
 
-        assert entities.findAll('a test').is_a?(Array)
-        assert entities.findAll('a test').size > 0
+        assert entities.findAll('a test').is_a?(Evernote::EDAM::NoteStore::NoteList)
+        assert entities.findAll('a test').totalNotes > 0
     end
 end
