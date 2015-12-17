@@ -8,7 +8,7 @@ module Evertils
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
 
-          @evernote.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 300)
+          @evernote.call(:findNotes, filter, nil, 300)
         end
 
         def findOne(title, notebook = nil)
@@ -16,7 +16,7 @@ module Evertils
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
 
-          @evernote.findNotes(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, filter, nil, 1)
+          @evernote.call(:findNotes, filter, nil, 1)
         end
 
       end

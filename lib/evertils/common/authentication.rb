@@ -43,6 +43,14 @@ module Evertils
       def user
         @@user.getUser(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
       end
+
+      def call(func, *args)
+        if args.size > 0
+          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, *args)
+        else
+          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        end
+      end
     end
   end
 end

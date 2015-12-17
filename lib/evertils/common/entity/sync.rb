@@ -4,7 +4,7 @@ module Evertils
       class Sync < Entity::Base
 
         def state
-          @evernote.getSyncState(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          @evernote.call(:getSyncState)
         end
 
       end

@@ -27,13 +27,13 @@ module Evertils
             notebook.name = "#{stack}/#{name}"
           end
           
-          @evernote.createNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, notebook)
+          @evernote.call(:createNotebook, notebook)
         end
 
         def expunge(name)
           nb = find(name)
 
-          @evernote.expungeNotebook(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, nb.guid)
+          @evernote.call(:expungeNotebook, nb.guid)
         end
 
         def notes(guid = nil)

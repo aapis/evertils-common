@@ -4,7 +4,7 @@ module Evertils
       class Notebooks < Entity::Base
 
         def all
-          @evernote.listNotebooks(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          @evernote.call(:listNotebooks)
         end
 
         def create_from_yml(full_path)

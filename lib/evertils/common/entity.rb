@@ -6,7 +6,7 @@ module Evertils
       class Base
 
         def initialize
-          @evernote = Authentication.new.store
+          @evernote = Authentication.new
           self
         end
 
