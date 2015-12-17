@@ -11,6 +11,8 @@ module Evertils
     module Queries
       class Backup
 
+        #
+        # @since 0.2.8
         def files(*files)
           date = DateTime.now
           note = Entity::Note.new

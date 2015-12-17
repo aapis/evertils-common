@@ -105,6 +105,22 @@ module Evertils
           @evernote.call(:expungeNote, note)
         end
 
+        #
+        # @since 0.2.8
+        def share(name)
+          note = find(name).guid
+
+          @evernote.call(:shareNote, note)
+        end
+
+        #
+        # @since 0.2.8
+        def unshare(name)
+          note = find(name).guid
+
+          @evernote.call(:stopSharingNote, note)
+        end
+
         def find(name)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = name
