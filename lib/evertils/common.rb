@@ -4,6 +4,7 @@ require 'yaml'
 require 'evertils/common/enml'
 require 'evertils/common/entity'
 require 'evertils/common/version'
+require 'evertils/common/queries/backup'
 require 'evertils/common/queries/simple'
 require 'evertils/common/queries/time'
 
