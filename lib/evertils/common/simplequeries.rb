@@ -10,15 +10,14 @@ require 'evertils/common/entity/tags'
 
 module Evertils
   module Common
-    class Evernote
+    class SimpleQueries
 
       def notebooks
         Entity::Notebooks.new.all
       end
 
       def tags
-        tags = Entity::Tags.new
-        tags.all
+        Entity::Tags.new.all
       end
 
       def notebook_by_name(name)
