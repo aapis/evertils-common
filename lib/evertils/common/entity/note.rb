@@ -35,7 +35,13 @@ module Evertils
           body = body.join if body.is_a? Array
 
           # a file was requested, lets prepare it for storage
-          if !file.nil?
+          if file.is_a? Array
+            file.each do |f|
+              media_resource = ENML.new(f)
+              body.concat(media_resource.embeddable_element)
+              our_note.resources << media_resource.element
+            end
+          else
             media_resource = ENML.new(file)
             body.concat(media_resource.embeddable_element)
             our_note.resources << media_resource.element
@@ -50,12 +56,14 @@ module Evertils
           our_note.content = n_body
           our_note.created = created_on if !created_on.nil?
 
-          nb = Entity::Notebook.new
-          parent_notebook = nb.find(p_notebook_name)
-          parent_notebook = @evernote.call(:getDefaultNotebook) if parent_notebook.nil?
+          if !p_notebook_name.is_a? ::Evernote::EDAM::Type::Notebook
+            nb = Entity::Notebook.new
+            parent_notebook = nb.find(p_notebook_name)
+            parent_notebook = @evernote.call(:getDefaultNotebook) if parent_notebook.nil?
+          end
           
           # parent_notebook is optional; if omitted, default notebook is used
-          our_note.notebookGuid = parent_notebook.guid if parent_notebook.is_a? ::Evernote::EDAM::Type::Notebook
+          our_note.notebookGuid = parent_notebook.guid
 
           # Attempt to create note in Evernote account
           begin
