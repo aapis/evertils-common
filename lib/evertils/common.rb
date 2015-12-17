@@ -1,6 +1,8 @@
 require 'evernote-thrift'
 require 'notifaction'
 require 'yaml'
+require 'mime/types'
+
 require 'evertils/common/enml'
 require 'evertils/common/entity'
 require 'evertils/common/version'
