@@ -1,7 +1,9 @@
 require 'evernote-thrift'
 require 'notifaction'
+require 'yaml'
+require 'evertils/common/enml'
 require 'evertils/common/version'
-require 'evertils/common/simplequeries'
+require 'evertils/common/queries/simple'
 
 module Evertils
   module Common
