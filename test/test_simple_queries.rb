@@ -3,7 +3,7 @@ require 'evertils/common'
 
 class SimpleQueriesTest < Minitest::Test
   def setup
-    @entity = Evertils::Common::Queries::Simple.new
+    @entity = Evertils::Common::Query::Simple.new
   end
   
   def test_notebooks

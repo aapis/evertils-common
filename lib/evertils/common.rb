@@ -6,9 +6,9 @@ require 'mime/types'
 require 'evertils/common/enml'
 require 'evertils/common/entity'
 require 'evertils/common/version'
-require 'evertils/common/queries/backup'
-require 'evertils/common/queries/simple'
-require 'evertils/common/queries/time'
+require 'evertils/common/query/backup'
+require 'evertils/common/query/simple'
+require 'evertils/common/query/time'
 
 module Evertils
   module Common

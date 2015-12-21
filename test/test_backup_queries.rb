@@ -3,12 +3,14 @@ require 'evertils/common'
 
 class BackupQueriesTest < Minitest::Test
   def setup
-    @entity = Evertils::Common::Queries::Simple.new
+    @entity = Evertils::Common::Query::Backup.new
   end
   
   #
   # @since 0.2.8
   def test_files
-    assert @entity.files.is_a? Hash
+    backup = @entity.files(__FILE__)
+
+    assert backup.is_a? Hash
   end
 end
