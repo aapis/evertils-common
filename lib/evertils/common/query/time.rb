@@ -8,16 +8,27 @@ require 'evertils/common/entity/sync'
 
 module Evertils
   module Common
-    module Queries
-      class Backup
+    module Query
+      class Time
 
-        #
-        # @since 0.2.8
-        def files(*files)
-          date = DateTime.now
-          note = Entity::Note.new
+        def notes_created_in_range(start, finish)
 
-          note.create("Backup: #{date.to_s}", '', 'Backup', files)
+        end
+
+        def notes_updated_in_range(start, finish)
+
+        end
+
+        def notebooks_created_in_range(start, finish)
+
+        end
+
+        def notebooks_updated_in_range(start, finish)
+
+        end
+
+        def last_sync
+
         end
 
       end

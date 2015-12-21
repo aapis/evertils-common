@@ -8,7 +8,7 @@ require 'evertils/common/entity/sync'
 
 module Evertils
   module Common
-    module Queries
+    module Query
       class Simple
 
         def notebooks
