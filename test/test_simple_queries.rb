@@ -17,7 +17,7 @@ class SimpleQueriesTest < Minitest::Test
   end
 
   def test_create_note
-    note = @entity.create_note("Sample title", "Sample body", nil, nil, nil, nil)
+    note = @entity.create_note("Sample title", "Sample body")
 
     refute_nil note
     assert @entity.destroy_note(note[:note].title)

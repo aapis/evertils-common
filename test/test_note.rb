@@ -5,7 +5,7 @@ class NoteTest < Minitest::Test
   def test_note_found
     entity = Evertils::Common::Entity::Note.new
     note_name = "ET: This is a test note, I should be deleted"
-    entity.create(note_name)
+    entity.create(note_name, 'Test Body')
 
     assert entity.find(note_name)
 
