@@ -1,6 +1,7 @@
 module Evertils
   module Common
     class Authentication
+
       attr_accessor :store, :shardId, :version
 
       def initialize

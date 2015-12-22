@@ -1,6 +1,7 @@
 module Evertils
   module Common
     class ENML
+
       attr_reader :element, :embeddable_element
 
       def initialize(file = nil)

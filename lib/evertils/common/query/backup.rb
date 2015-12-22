@@ -10,6 +10,7 @@ module Evertils
   module Common
     module Query
       class Backup < Query::Base
+
         attr_accessor :note
 
         #

@@ -34,7 +34,7 @@ module Evertils
         # @since 0.2.8
         def end_of_day(date = nil)
           date = ::Time.now unless date
-          
+
           ::Time.mktime(date.year, date.month, date.day, 23, 59, 59, 0).to_datetime
         end
 

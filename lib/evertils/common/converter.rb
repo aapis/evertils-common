@@ -2,6 +2,7 @@ module Evertils
   module Common
     module Converter
       class Base
+        
         #
         # @since 0.2.8
         def deprecation_notice(version)
