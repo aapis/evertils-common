@@ -22,7 +22,10 @@ module Evertils
           end
         end
 
-        def create(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+        def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+          raise "Title is required" if title.nil?
+          raise "Body is required" if body.nil?
+          
           # final output
           output = {}
 
@@ -30,9 +33,6 @@ module Evertils
           our_note = ::Evernote::EDAM::Type::Note.new
           our_note.resources = []
           our_note.tagNames = []
-
-          # only join when required
-          body = body.join if body.is_a? Array
 
           # a file was requested, lets prepare it for storage
           if file.is_a? Array
@@ -46,6 +46,9 @@ module Evertils
             body.concat(media_resource.embeddable_element)
             our_note.resources << media_resource.element
           end
+
+          # only join when required
+          body = body.join if body.is_a? Array
 
           n_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
           n_body += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
@@ -127,14 +130,41 @@ module Evertils
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
-          spec.includeUpdated = true
-          spec.includeTagGuids = true
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
           if result.totalNotes > 0
-            result.notes[0]
+            return result.notes[0]
           end
+
+          result
+        end
+        alias_method :find_by_name, :find
+        
+        def find_by_date(start, finish = DateTime.now)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = 'created:year-2'
+          #filter.words = 'created:week-1'
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeCreated = true
+
+          pool = @evernote.call(:findNotesMetadata, filter, 0, 600, spec)
+          notes_by_date = []
+
+          pool.notes.each do |note|
+            note_datetime = DateTime.strptime(note.created.to_s[0...-3], '%s')
+
+            range = start_of_day(start)..end_of_day(finish)
+            puts note_datetime, note_datetime.class, range.cover?(note_datetime)
+            #notes_by_date << note if range.cover? note_datetime
+            #notes_by_date << note if note_datetime < end_of_day(start) && note_datetime > start_of_day(start)
+            #notes_by_date << note if note_datetime < end_of_day(finish) && note_datetime > start_of_day(finish)
+          end
+
+          notes_by_date
         end
 
       end
