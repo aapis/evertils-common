@@ -141,9 +141,9 @@ module Evertils
         end
         alias_method :find_by_name, :find
         
-        def find_by_date_range(start, finish = DateTime.now)
+        def find_by_date_range(start, finish = DateTime.now, period = :created)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "created:year-#{year_diff(start.year)}"
+          filter.words = "#{period}:year-#{year_diff(start.year)}"
           filter.order = 1
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
@@ -155,7 +155,7 @@ module Evertils
           notes_by_date = []
 
           pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.created.to_s[0...-3], '%s')
+            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
 
             notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
           end
@@ -163,9 +163,9 @@ module Evertils
           notes_by_date
         end
 
-        def find_by_date(date)
+        def find_by_date(date, period = :created)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "created:year-#{year_diff(date.year)}"
+          filter.words = "#{period}:year-#{year_diff(date.year)}"
           filter.order = 1
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
@@ -177,7 +177,7 @@ module Evertils
           notes_by_date = []
           
           pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.created.to_s[0...-3], '%s')
+            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
 
             notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
           end
