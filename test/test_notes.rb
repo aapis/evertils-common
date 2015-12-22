@@ -12,4 +12,9 @@ class NotesTest < Minitest::Test
     assert @entities.find_all('a test').size > 0
   end
 
+  def test_find_by_tag
+    assert @entities.find_by_tag('client').is_a?(Array)
+    assert @entities.find_by_tag('client').size > 0
+  end
+
 end

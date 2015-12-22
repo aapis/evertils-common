@@ -27,6 +27,17 @@ module Evertils
           response.notes
         end
 
+        def find_by_tag(tag_name)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "tag:#{tag_name}"
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+
+          response = @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          response.notes
+        end
+
       end
     end
   end
