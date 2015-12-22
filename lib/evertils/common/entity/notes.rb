@@ -11,7 +11,8 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          response = @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          response.notes
         end
 
         def find_one(title, notebook = nil)
@@ -22,7 +23,8 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
 
-          @evernote.call(:findNotesMetadata, filter, nil, 1, spec)
+          response = @evernote.call(:findNotesMetadata, filter, nil, 1, spec)
+          response.notes
         end
 
       end

@@ -8,8 +8,8 @@ class NotesTest < Minitest::Test
   end
 
   def test_notes
-    assert @entities.find_all('a test').is_a?(Evernote::EDAM::NoteStore::NoteList)
-    assert @entities.find_all('a test').totalNotes > 0
+    assert @entities.find_all('a test').is_a?(Array)
+    assert @entities.find_all('a test').size > 0
   end
 
 end
