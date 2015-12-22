@@ -2,9 +2,13 @@ require 'minitest/autorun'
 require 'evertils/common'
 
 class SyncTest < Minitest::Test
-  def test_sync
-    entity = Evertils::Common::Entity::Sync.new
 
-    assert entity.state
+  def setup
+    @entity = Evertils::Common::Entity::Sync.new
   end
+
+  def test_sync
+    assert @entity.state
+  end
+  
 end

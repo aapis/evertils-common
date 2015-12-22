@@ -8,8 +8,8 @@ require 'evertils/common/entity/sync'
 
 module Evertils
   module Common
-    module Queries
-      class Simple
+    module Query
+      class Simple < Query::Base
 
         def notebooks
           Entity::Notebooks.new.all
@@ -60,7 +60,7 @@ module Evertils
           note.exists? name
         end
 
-        def create_note(title, body = template_contents, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+        def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
           note = Entity::Note.new
           note.create(title, body, p_notebook_name, file, share_note, created_on)
         end
