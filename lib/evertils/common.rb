@@ -12,6 +12,7 @@ require 'evertils/common/version'
 require 'evertils/common/query/backup'
 require 'evertils/common/query/simple'
 require 'evertils/common/query/time'
+require 'evertils/common/converter/yaml_to_enml'
 
 module Evertils
   module Common
