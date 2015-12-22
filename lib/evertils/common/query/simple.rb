@@ -9,7 +9,7 @@ require 'evertils/common/entity/sync'
 module Evertils
   module Common
     module Query
-      class Simple
+      class Simple < Query::Base
 
         def notebooks
           Entity::Notebooks.new.all

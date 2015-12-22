@@ -9,7 +9,8 @@ require 'evertils/common/entity/sync'
 module Evertils
   module Common
     module Query
-      class Backup
+      class Backup < Query::Base
+        attr_accessor :note
 
         #
         # @since 0.2.8
