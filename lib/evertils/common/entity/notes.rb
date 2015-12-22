@@ -3,20 +3,26 @@ module Evertils
     module Entity
       class Notes < Entity::Base
 
-        def findAll(title, notebook = nil)
+        def find_all(title, notebook = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300)
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
         end
 
-        def findOne(title, notebook = nil)
+        def find_one(title, notebook = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
 
-          @evernote.call(:findNotesMetadata, filter, nil, 1)
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+
+          @evernote.call(:findNotesMetadata, filter, nil, 1, spec)
         end
 
       end
