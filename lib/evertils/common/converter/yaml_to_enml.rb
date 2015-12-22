@@ -9,13 +9,15 @@ module Evertils
           contents = File.open(path, "rb") { |io| io.read }
           obj = YAML::load(contents)
 
-          from_string(obj)
+          builder(obj)
         end
 
         #
         # @since 0.2.9
         def from_string(yaml)
-          builder(yaml)
+          obj = YAML::load(yaml)
+
+          builder(obj)
         end
 
         private
