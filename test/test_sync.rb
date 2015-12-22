@@ -3,10 +3,12 @@ require 'evertils/common'
 
 class SyncTest < Minitest::Test
 
-  def test_sync
-    entity = Evertils::Common::Entity::Sync.new
+  def setup
+    @entity = Evertils::Common::Entity::Sync.new
+  end
 
-    assert entity.state
+  def test_sync
+    assert @entity.state
   end
   
 end
