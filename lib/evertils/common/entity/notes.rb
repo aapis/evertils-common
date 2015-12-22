@@ -19,6 +19,34 @@ module Evertils
           @evernote.call(:findNotesMetadata, filter, nil, 1)
         end
 
+        def last_year
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:year-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        def last_month
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:month-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        def last_week
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:week-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        def yesterday
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:day-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
       end
     end
   end
