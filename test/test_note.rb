@@ -39,7 +39,7 @@ class NoteTest < Minitest::Test
   def test_note_unshare
     note_name = "ET: Shared Note"
 
-    assert @entity.unshare(note_name)
+    assert_nil @entity.unshare(note_name)
 
     @entity.expunge(note_name)
   end
