@@ -91,8 +91,10 @@ module Evertils
         end
 
         def exists?(name)
-          notes = Notes.new
-          notes.findAll(name).totalNotes > 0
+          # notes = Notes.new
+          # notes.find_all(name).size > 0
+          return true if find(name).guid
+          false
         end
 
         def destroy(name)
