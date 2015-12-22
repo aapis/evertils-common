@@ -62,6 +62,42 @@ module Evertils
           notebook_manager.find_by_date_range(start, finish, :updated)
         end
 
+        #
+        # @since 0.2.8
+        def last_year
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:year-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        #
+        # @since 0.2.8
+        def last_month
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:month-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        #
+        # @since 0.2.8
+        def last_week
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:week-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
+        #
+        # @since 0.2.8
+        def yesterday
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:day-1"
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300)
+        end
+
       end
     end
   end
