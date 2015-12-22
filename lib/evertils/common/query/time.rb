@@ -14,7 +14,7 @@ module Evertils
           finish = DateTime.now if !finish
           note_manager = Evertils::Common::Entity::Note.new
 
-          note_manager.find_by_date(start, finish)
+          note_manager.find_by_date_range(start, finish)
         end
 
         #
@@ -29,6 +29,7 @@ module Evertils
         def notes_created_on(date = DateTime.now)
           note_manager = Evertils::Common::Entity::Note.new
 
+          # start should be used for both start and end here
           note_manager.find_by_date(date)
         end
 

@@ -141,30 +141,59 @@ module Evertils
         end
         alias_method :find_by_name, :find
         
-        def find_by_date(start, finish = DateTime.now)
+        def find_by_date_range(start, finish = DateTime.now)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = 'created:year-2'
-          #filter.words = 'created:week-1'
+          filter.words = "created:year-#{year_diff(start.year)}"
+          filter.order = 1
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
           spec.includeUpdated = true
           spec.includeCreated = true
 
-          pool = @evernote.call(:findNotesMetadata, filter, 0, 600, spec)
+          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
           notes_by_date = []
 
           pool.notes.each do |note|
             note_datetime = DateTime.strptime(note.created.to_s[0...-3], '%s')
 
-            range = start_of_day(start)..end_of_day(finish)
-            puts note_datetime, note_datetime.class, range.cover?(note_datetime)
-            #notes_by_date << note if range.cover? note_datetime
-            #notes_by_date << note if note_datetime < end_of_day(start) && note_datetime > start_of_day(start)
-            #notes_by_date << note if note_datetime < end_of_day(finish) && note_datetime > start_of_day(finish)
+            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
           end
 
           notes_by_date
+        end
+
+        def find_by_date(date)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "created:year-#{year_diff(date.year)}"
+          filter.order = 1
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeCreated = true
+
+          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
+          notes_by_date = []
+          
+          pool.notes.each do |note|
+            note_datetime = DateTime.strptime(note.created.to_s[0...-3], '%s')
+
+            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
+          end
+
+          notes_by_date
+        end
+
+        private
+
+        def year_diff(start_year)
+          curr_year = DateTime.now.year
+          diff = curr_year - start_year
+
+          return 1 if diff == 0 || start_year > curr_year
+
+          diff
         end
 
       end
