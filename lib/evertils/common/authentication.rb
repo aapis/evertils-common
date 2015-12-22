@@ -39,6 +39,7 @@ module Evertils
           when 19
             minutes = (e.rateLimitDuration/60).to_i
             Notify.warning("You are rate limited!  Wait #{minutes} minutes")
+            exit(0)
           end
         end
       end
