@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'evertils/common'
 
 class TagTest < Minitest::Test
+
   def test_tag_found
     tag = Evertils::Common::Entity::Tag.new
 
@@ -21,4 +22,5 @@ class TagTest < Minitest::Test
     assert tag.create(date).is_a? Evernote::EDAM::Type::Tag
     assert tag.expunge(date)
   end
+
 end

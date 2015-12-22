@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'evertils/common'
 
 class NotebookTest < Minitest::Test
+
   def test_notebook_found
     entity = Evertils::Common::Entity::Notebook.new
     nb_name = "ET: Sample Notebook"
@@ -17,4 +18,5 @@ class NotebookTest < Minitest::Test
 
     assert_nil entity.find('ET: Invalid Notebook Name')
   end
+  
 end

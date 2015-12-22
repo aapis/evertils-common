@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'evertils/common'
 
 class SimpleQueriesTest < Minitest::Test
+
   def setup
     @entity = Evertils::Common::Query::Simple.new
   end
@@ -28,4 +29,5 @@ class SimpleQueriesTest < Minitest::Test
     assert @entity.tags.is_a?(Array)
     assert @entity.tags.size > 0
   end
+  
 end

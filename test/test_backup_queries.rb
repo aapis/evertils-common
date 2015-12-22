@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'evertils/common'
 
 class BackupQueriesTest < Minitest::Test
+
   def setup
     @entity = Evertils::Common::Query::Backup.new
   end
@@ -16,4 +17,5 @@ class BackupQueriesTest < Minitest::Test
     
     note_manager.expunge(backup[:note].title)
   end
+  
 end
