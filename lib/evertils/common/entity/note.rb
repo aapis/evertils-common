@@ -23,9 +23,6 @@ module Evertils
         end
 
         def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
-          raise "Title is required" if title.nil?
-          raise "Body is required" if body.nil?
-          
           # final output
           output = {}
 
@@ -35,16 +32,18 @@ module Evertils
           our_note.tagNames = []
 
           # a file was requested, lets prepare it for storage
-          if file.is_a? Array
-            file.each do |f|
-              media_resource = ENML.new(f)
+          if file
+            if file.is_a? Array
+              file.each do |f|
+                media_resource = ENML.new(f)
+                body.concat(media_resource.embeddable_element)
+                our_note.resources << media_resource.element
+              end
+            else
+              media_resource = ENML.new(file)
               body.concat(media_resource.embeddable_element)
               our_note.resources << media_resource.element
             end
-          else
-            media_resource = ENML.new(file)
-            body.concat(media_resource.embeddable_element)
-            our_note.resources << media_resource.element
           end
 
           # only join when required
@@ -136,8 +135,6 @@ module Evertils
           if result.totalNotes > 0
             return result.notes[0]
           end
-
-          result
         end
         alias_method :find_by_name, :find
         
