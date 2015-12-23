@@ -91,7 +91,7 @@ module Evertils
         end
 
         def exists?(name)
-          return true if find(name).guid
+          return true if !find(name).nil?
           false
         end
 
