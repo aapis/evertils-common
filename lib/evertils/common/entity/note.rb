@@ -93,7 +93,7 @@ module Evertils
         def exists?(name)
           # notes = Notes.new
           # notes.find_all(name).size > 0
-          return true if find(name).guid
+          return true if !find(name).nil?
           false
         end
 
