@@ -24,18 +24,20 @@ module Evertils
 
         #
         # @since 0.2.8
-        def start_of_day(date = nil)
-          date = ::Time.now unless date
-
+        def start_of_day(date = ::Time.now)
           ::Time.mktime(date.year, date.month, date.day, 12, 0, 0, 0, 0).to_datetime
         end
 
         #
         # @since 0.2.8
-        def end_of_day(date = nil)
-          date = ::Time.now unless date
-
+        def end_of_day(date = ::Time.now)
           ::Time.mktime(date.year, date.month, date.day, 23, 59, 59, 0).to_datetime
+        end
+
+        #
+        # @since 0.2.9
+        def prop(name)
+          @entity.send(name)
         end
 
       end
