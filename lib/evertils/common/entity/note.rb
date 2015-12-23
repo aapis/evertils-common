@@ -7,7 +7,7 @@ module Evertils
         # @since 0.2.0
         def create_from_yml(full_path)
           begin
-            if File.exists? full_path
+            if File.exist? full_path
               conf = YAML::load(File.open(full_path))
               required = %w(title body)
 
@@ -82,7 +82,7 @@ module Evertils
             ## See EDAMErrorCode enumeration for error code explanation
             ## http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
             Notify.error "EDAMUserException: #{edue}\nCode #{edue.errorCode}: #{edue.parameter}"
-          rescue ::Evernote::EDAM::Error::EDAMNotFoundException => ednfe
+          rescue ::Evernote::EDAM::Error::EDAMNotFoundException
             ## Parent Notebook GUID doesn't correspond to an actual notebook
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
           end
