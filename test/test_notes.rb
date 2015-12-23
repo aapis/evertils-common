@@ -17,4 +17,36 @@ class NotesTest < Minitest::Test
     assert @entities.find_by_tag('client').size > 0, 'Incorrect number of results for notes.find_by_tag'
   end
 
+  def test_find_created_by_date_range
+    assert @entities.find_by_date_range(DateTime.new(2015, 01, 01)).is_a?(Array), 'Incorrect dataype for notes.find_by_date_range (created)'
+    assert @entities.find_by_date_range(DateTime.new(2015, 01, 01)).size > 0, 'Incorrect number of results for notes.find_by_date_range (created)'
+  end
+
+  def test_find_updated_by_date_range
+    assert @entities.find_by_date_range(DateTime.new(2015, 01, 01), DateTime.now, :updated).is_a?(Array), 'Incorrect dataype for notes.find_by_date_range (updated)'
+    assert @entities.find_by_date_range(DateTime.new(2015, 01, 01), DateTime.now, :updated).size > 0, 'Incorrect number of results for notes.find_by_date_range (updated)'
+  end
+
+  def test_find_created_by_date
+    tmp_note = Evertils::Common::Entity::Note.new
+    tmp_note_name = "ET: Testing find by created date"
+    tmp_note.create(tmp_note_name, "A body")
+    
+    assert @entities.find_by_date(DateTime.now).is_a?(Array), 'Incorrect dataype for notes.find_by_date_range (created)'
+    assert @entities.find_by_date(DateTime.now).size > 0, 'Incorrect number of results for notes.find_by_date_range (created)'
+
+    tmp_note.expunge(tmp_note_name)
+  end
+
+  def test_find_updated_by_date
+    tmp_note = Evertils::Common::Entity::Note.new
+    tmp_note_name = "ET: Testing find by updated date"
+    tmp_note.create(tmp_note_name, "A body")
+    
+    assert @entities.find_by_date(DateTime.now, :updated).is_a?(Array), 'Incorrect dataype for notes.find_by_date_range (updated)'
+    assert @entities.find_by_date(DateTime.now, :updated).size > 0, 'Incorrect number of results for notes.find_by_date_range (updated)'
+
+    tmp_note.expunge(tmp_note_name)
+  end
+
 end
