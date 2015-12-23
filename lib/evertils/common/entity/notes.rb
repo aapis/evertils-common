@@ -54,7 +54,7 @@ module Evertils
           notes_by_date = []
 
           pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
+            note_datetime = note_date(note, period)
 
             notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
           end
@@ -97,6 +97,10 @@ module Evertils
           return 1 if diff == 0 || start_year > curr_year
 
           diff
+        end
+
+        def note_date(note, period)
+          DateTime.strptime(note.send(period).to_s[0...-3], '%s')
         end
 
       end
