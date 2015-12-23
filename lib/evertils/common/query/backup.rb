@@ -11,15 +11,14 @@ module Evertils
     module Query
       class Backup < Query::Base
 
-        attr_accessor :note
-
         #
         # @since 0.2.8
         def files(*files)
           date = DateTime.now
-          note = Entity::Note.new
+          nm = Entity::Note.new
 
-          note.create("Backup: #{date.to_s}", '', 'Backup', files)
+          note = nm.create("Backup: #{date.to_s}", '', 'Backup', files)
+          note
         end
 
       end

@@ -29,11 +29,7 @@ module Evertils
             notebook.name = "#{stack}/#{name}"
           end
           
-          begin
-            @entity = @evernote.call(:createNotebook, notebook)
-          rescue Evernote::EDAM::Error::EDAMUserException => e
-            puts e.inspect
-          end
+          @entity = @evernote.call(:createNotebook, notebook)
 
           self if @entity
         end

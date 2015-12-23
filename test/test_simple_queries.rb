@@ -16,7 +16,7 @@ class SimpleQueriesTest < Minitest::Test
     note = @entity.create_note("Sample title", "Sample body")
 
     refute_nil note, 'Unable to create note "Sample title"'
-    assert @entity.destroy_note(note[:note].title), 'Unable to destroy note "Sample title"'
+    assert note.expunge!, 'Unable to destroy note "Sample title"'
   end
 
 end

@@ -21,6 +21,8 @@ module Evertils
           @entity.name = name
 
           @evernote.call(:createTag, @entity)
+
+          self if @entity
         end
 
         def expunge!
