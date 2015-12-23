@@ -17,7 +17,7 @@ class TagTest < Minitest::Test
 
   def test_tag_create
     date = DateTime.now.to_s
-    assert @tag.create(date).is_a? Evernote::EDAM::Type::Tag, 'Incorrect datatype for tag.create'
+    assert @tag.create(date).is_a?(Evernote::EDAM::Type::Tag), 'Incorrect datatype for tag.create'
     assert @tag.expunge(date), 'Unable to delete test tag'
   end
 
