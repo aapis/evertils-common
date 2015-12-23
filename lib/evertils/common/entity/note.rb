@@ -23,6 +23,8 @@ module Evertils
         end
 
         def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+          @entity = nil
+
           # final output
           output = {}
 
@@ -61,20 +63,16 @@ module Evertils
           if !p_notebook_name.is_a? ::Evernote::EDAM::Type::Notebook
             nb = Entity::Notebook.new
             parent_notebook = nb.find(p_notebook_name)
-            parent_notebook = @evernote.call(:getDefaultNotebook) if parent_notebook.nil?
+            parent_notebook = nb.default if parent_notebook.nil?
           end
           
           # parent_notebook is optional; if omitted, default notebook is used
-          our_note.notebookGuid = parent_notebook.guid
+          our_note.notebookGuid = parent_notebook.prop(:guid)
 
           # Attempt to create note in Evernote account
           begin
-            output[:note] = @evernote.call(:createNote, our_note)
-            
-            if share_note
-              shareKey = @evernote.call(:shareNote, output[:note].guid)
-              output[:share_url] = "https://#{Evertils::Common::EVERNOTE_HOST}/shard/#{@model.shardId}/sh/#{output[:note].guid}/#{shareKey}"
-            end
+            @entity = @evernote.call(:createNote, our_note)
+            share if share_note
           rescue ::Evernote::EDAM::Error::EDAMUserException => edue
             ## Something was wrong with the note data
             ## See EDAMErrorCode enumeration for error code explanation
@@ -85,9 +83,9 @@ module Evertils
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
           end
 
-          Notify.success("#{parent_notebook.stack}/#{parent_notebook.name}/#{our_note.title} created")
+          Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created")
 
-          output
+          self if @entity
         end
 
         def exists?(name)
@@ -95,16 +93,20 @@ module Evertils
           false
         end
 
-        def destroy(name)
-          note = find(name).guid
-
-          @evernote.call(:deleteNote, note)
+        def destroy
+          @evernote.call(:deleteNote, @entity.guid)
         end
 
-        def expunge(name)
-          note = find(name).guid
+        #
+        # @since 0.2.9
+        def expunge!
+          @evernote.call(:expungeNote, @entity.guid)
+        end
 
-          @evernote.call(:expungeNote, note)
+        def expunge
+          deprecation_notice('0.2.9')
+
+          @evernote.call(:expungeNote, @entity.guid)
         end
 
         #
@@ -118,21 +120,19 @@ module Evertils
 
         #
         # @since 0.2.8
-        def share(name)
-          note = find(name).guid
-
-          @evernote.call(:shareNote, note)
+        def share
+          @evernote.call(:shareNote, @entity.guid)
         end
 
         #
         # @since 0.2.8
-        def unshare(name)
-          note = find(name).guid
-
-          @evernote.call(:stopSharingNote, note)
+        def unshare
+          @evernote.call(:stopSharingNote, @entity.guid)
         end
 
         def find(name)
+          @entity = nil
+
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = name
 
@@ -142,8 +142,10 @@ module Evertils
           result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
           if result.totalNotes > 0
-            return result.notes[0]
+            @entity = result.notes[0]
           end
+
+          self if @entity
         end
         alias_method :find_by_name, :find
 
