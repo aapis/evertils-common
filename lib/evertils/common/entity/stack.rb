@@ -7,7 +7,7 @@ module Evertils
           begin
             nb = Notebook.new
 
-            if File.exists? full_path
+            if File.exist? full_path
               conf = YAML::load(File.open(full_path))
               required = %w(name children)
               

@@ -3,9 +3,11 @@ module Evertils
     module Entity
       class Note < Entity::Base
 
+        #
+        # @since 0.2.0
         def create_from_yml(full_path)
           begin
-            if File.exists? full_path
+            if File.exist? full_path
               conf = YAML::load(File.open(full_path))
               required = %w(title body)
 
@@ -22,7 +24,11 @@ module Evertils
           end
         end
 
+        #
+        # @since 0.2.0
         def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+          @entity = nil
+
           # final output
           output = {}
 
@@ -61,71 +67,86 @@ module Evertils
           if !p_notebook_name.is_a? ::Evernote::EDAM::Type::Notebook
             nb = Entity::Notebook.new
             parent_notebook = nb.find(p_notebook_name)
-            parent_notebook = @evernote.call(:getDefaultNotebook) if parent_notebook.nil?
+            parent_notebook = nb.default if parent_notebook.nil?
           end
           
           # parent_notebook is optional; if omitted, default notebook is used
-          our_note.notebookGuid = parent_notebook.guid
+          our_note.notebookGuid = parent_notebook.prop(:guid)
 
           # Attempt to create note in Evernote account
           begin
-            output[:note] = @evernote.call(:createNote, our_note)
-            
-            if share_note
-              shareKey = @evernote.call(:shareNote, output[:note].guid)
-              output[:share_url] = "https://#{Evertils::Common::EVERNOTE_HOST}/shard/#{@model.shardId}/sh/#{output[:note].guid}/#{shareKey}"
-            end
+            @entity = @evernote.call(:createNote, our_note)
+            share if share_note
           rescue ::Evernote::EDAM::Error::EDAMUserException => edue
             ## Something was wrong with the note data
             ## See EDAMErrorCode enumeration for error code explanation
             ## http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
             Notify.error "EDAMUserException: #{edue}\nCode #{edue.errorCode}: #{edue.parameter}"
-          rescue ::Evernote::EDAM::Error::EDAMNotFoundException => ednfe
+          rescue ::Evernote::EDAM::Error::EDAMNotFoundException
             ## Parent Notebook GUID doesn't correspond to an actual notebook
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
           end
 
-          Notify.success("#{parent_notebook.stack}/#{parent_notebook.name}/#{our_note.title} created")
+          Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created")
 
-          output
+          self if @entity
         end
 
+        #
+        # @since 0.2.0
         def exists?(name)
-          # notes = Notes.new
-          # notes.find_all(name).size > 0
           return true if !find(name).nil?
           false
         end
 
-        def destroy(name)
-          note = find(name).guid
-
-          @evernote.call(:deleteNote, note)
+        #
+        # @since 0.2.0
+        def destroy
+          @evernote.call(:deleteNote, @entity.guid)
         end
 
-        def expunge(name)
-          note = find(name).guid
+        #
+        # @since 0.2.9
+        def expunge!
+          @evernote.call(:expungeNote, @entity.guid)
+        end
 
-          @evernote.call(:expungeNote, note)
+        #
+        # @since 0.2.0
+        def expunge
+          deprecation_notice('0.2.9')
+
+          @evernote.call(:expungeNote, @entity.guid)
+        end
+
+        #
+        # @since 0.2.9
+        def move_to(notebook)
+          nb = Evertils::Common::Entity::Notebook.new
+          target = nb.find(notebook)
+          
+          @entity.notebookGuid = target.prop(:guid)
+
+          @evernote.call(:updateNote, @entity)
         end
 
         #
         # @since 0.2.8
-        def share(name)
-          note = find(name).guid
-
-          @evernote.call(:shareNote, note)
+        def share
+          @evernote.call(:shareNote, @entity.guid)
         end
 
         #
         # @since 0.2.8
-        def unshare(name)
-          note = find(name).guid
-
-          @evernote.call(:stopSharingNote, note)
+        def unshare
+          @evernote.call(:stopSharingNote, @entity.guid)
         end
 
+        #
+        # @since 0.2.0
         def find(name)
+          @entity = nil
+
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = name
 
@@ -135,65 +156,12 @@ module Evertils
           result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
           if result.totalNotes > 0
-            return result.notes[0]
+            @entity = result.notes[0]
           end
+
+          self if @entity
         end
         alias_method :find_by_name, :find
-        
-        def find_by_date_range(start, finish = DateTime.now, period = :created)
-          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "#{period}:year-#{year_diff(start.year)}"
-          filter.order = 1
-
-          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          spec.includeTitle = true
-          spec.includeUpdated = true
-          spec.includeCreated = true
-
-          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
-          notes_by_date = []
-
-          pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
-
-            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
-          end
-
-          notes_by_date
-        end
-
-        def find_by_date(date, period = :created)
-          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "#{period}:year-#{year_diff(date.year)}"
-          filter.order = 1
-
-          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          spec.includeTitle = true
-          spec.includeUpdated = true
-          spec.includeCreated = true
-
-          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
-          notes_by_date = []
-          
-          pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
-
-            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
-          end
-
-          notes_by_date
-        end
-
-        private
-
-        def year_diff(start_year)
-          curr_year = DateTime.now.year
-          diff = curr_year - start_year
-
-          return 1 if diff == 0 || start_year > curr_year
-
-          diff
-        end
 
       end
     end

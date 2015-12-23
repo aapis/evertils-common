@@ -6,19 +6,21 @@ module Evertils
       class Notebook < Entity::Base
 
         def find(name)
-          @notebook = nil
+          @entity = nil
           notebooks = Notebooks.new.all
 
           notebooks.each do |notebook|
             if notebook.name == name.to_s
-              @notebook = notebook
+              @entity = notebook
             end
           end
 
-          @notebook
+          self if @entity
         end
 
         def create(name, stack = nil)
+          @entity = nil
+
           notebook = ::Evernote::EDAM::Type::Notebook.new
           notebook.name = name
           
@@ -27,21 +29,33 @@ module Evertils
             notebook.name = "#{stack}/#{name}"
           end
           
-          @evernote.call(:createNotebook, notebook)
+          @entity = @evernote.call(:createNotebook, notebook)
+
+          self if @entity
         end
 
-        def expunge(name)
-          nb = find(name)
+        def default
+          @entity = @evernote.call(:getDefaultNotebook)
 
-          @evernote.call(:expungeNotebook, nb.guid)
+          self if @entity
         end
 
-        def notes(guid = nil)
+        def expunge!
+          @evernote.call(:expungeNotebook, @entity.guid)
+        end
+
+        def expunge
+          deprecation_notice('0.2.9')
+
+          @evernote.call(:expungeNotebook, @entity.guid)
+        end
+
+        def notes
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.notebookGuid = @notebook.guid
+          filter.notebookGuid = @entity.guid
 
           notes = Notes.new
-          notes.find(nil, @notebook.guid)
+          notes.find(nil, @entity.guid)
         end
 
       end

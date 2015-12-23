@@ -27,6 +27,82 @@ module Evertils
           response.notes
         end
 
+        def find_by_tag(tag_name)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "tag:#{tag_name}"
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+
+          response = @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          response.notes
+        end
+
+        #
+        # @since 0.2.9
+        def find_by_date_range(start, finish = DateTime.now, period = :created)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "#{period}:year-#{year_diff(start.year)}"
+          filter.order = 1
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeCreated = true
+
+          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
+          notes_by_date = []
+
+          pool.notes.each do |note|
+            note_datetime = note_date(note, period)
+
+            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
+          end
+
+          notes_by_date
+        end
+
+        #
+        # @since 0.2.9
+        def find_by_date(date, period = :created)
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "#{period}:year-#{year_diff(date.year)}"
+          filter.order = 1
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeCreated = true
+
+          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
+          notes_by_date = []
+          
+          pool.notes.each do |note|
+            note_datetime = note_date(note, period)
+
+            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
+          end
+
+          notes_by_date
+        end
+
+        private
+
+        #
+        # @since 0.2.9
+        def year_diff(start_year)
+          curr_year = DateTime.now.year
+          diff = curr_year - start_year
+
+          return 1 if diff == 0 || start_year > curr_year
+
+          diff
+        end
+
+        def note_date(note, period)
+          DateTime.strptime(note.send(period).to_s[0...-3], '%s')
+        end
+
       end
     end
   end
