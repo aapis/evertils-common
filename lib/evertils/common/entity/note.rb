@@ -108,6 +108,15 @@ module Evertils
         end
 
         #
+        # @since 0.2.9
+        def move_to(notebook, note)
+          nb = Evertils::Common::Entity::Notebook.new
+          target = nb.find(notebook)
+          puts Evertils::Common::Entity::Notebooks.new.all.inspect
+          puts target.inspect
+        end
+
+        #
         # @since 0.2.8
         def share(name)
           note = find(name).guid
