@@ -44,4 +44,13 @@ class NoteTest < Minitest::Test
     @entity.expunge(note_name)
   end
 
+  def test_note_destroy
+    note_name = "ET: Soft delete this note"
+    @entity.create(note_name, 'Test Body')
+
+    assert @entity.destroy(note_name)
+
+    @entity.expunge(note_name)
+  end
+
 end

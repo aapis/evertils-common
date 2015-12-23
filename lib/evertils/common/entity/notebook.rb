@@ -36,6 +36,20 @@ module Evertils
           @evernote.call(:expungeNotebook, nb.guid)
         end
 
+        #
+        # @since 0.2.9
+        def destroy(name)
+          nb = find(name)
+
+          move_to('Trash', nb)
+        end
+
+        #
+        # @since 0.2.9
+        def move_to(notebook, note)
+          
+        end
+
         def notes(guid = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.notebookGuid = @notebook.guid
