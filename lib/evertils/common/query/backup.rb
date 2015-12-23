@@ -17,8 +17,13 @@ module Evertils
           date = DateTime.now
           nm = Entity::Note.new
 
-          note = nm.create("Backup: #{date.to_s}", '', 'Backup', files)
-          note
+          @entity = nm.create("Backup: #{date.to_s}", '', 'Backup', files)
+        end
+
+        #
+        # @since 0.2.9
+        def expunge!
+          @entity.expunge!
         end
 
       end

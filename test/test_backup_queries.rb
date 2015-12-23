@@ -11,11 +11,10 @@ class BackupQueriesTest < Minitest::Test
   # @since 0.2.8
   def test_files
     backup = @entity.files(__FILE__)
-    note_manager = Evertils::Common::Entity::Note.new
 
-    assert backup.is_a?(Hash), "Invalid datatype for backup.files response"
+    assert backup.is_a?(Evertils::Common::Entity::Note), "Invalid datatype for backup.files response"
     
-    note_manager.expunge(backup[:note].title)
+    backup.expunge!
   end
   
 end
