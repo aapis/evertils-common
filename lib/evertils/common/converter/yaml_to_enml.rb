@@ -26,7 +26,6 @@ module Evertils
         # @since 0.2.9
         def builder(obj)
           # hardcoding XML here because it's quick/easy
-          # TODO: use some sort of XML builder (not builder gem, it is shite)
           enml = '<?xml version="1.0" encoding="UTF-8"?>'
           enml += '<!DOCTYPE "en-note" SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
           enml += '<en-note>'
