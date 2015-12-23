@@ -51,4 +51,13 @@ class NoteTest < Minitest::Test
     test_note.expunge!
   end
 
+  def test_note_move
+    note_name = "ET: Soft delete this note"
+    test_note = @entity.create(note_name, 'Test Body')
+
+    assert test_note.move_to('Backup'), "Note \"#{note_name}\" could not be moved to target"
+
+    test_note.expunge!
+  end
+
 end

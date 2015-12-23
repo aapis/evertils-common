@@ -3,6 +3,8 @@ module Evertils
     module Entity
       class Note < Entity::Base
 
+        #
+        # @since 0.2.0
         def create_from_yml(full_path)
           begin
             if File.exists? full_path
@@ -22,6 +24,8 @@ module Evertils
           end
         end
 
+        #
+        # @since 0.2.0
         def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
           @entity = nil
 
@@ -88,11 +92,15 @@ module Evertils
           self if @entity
         end
 
+        #
+        # @since 0.2.0
         def exists?(name)
           return true if !find(name).nil?
           false
         end
 
+        #
+        # @since 0.2.0
         def destroy
           @evernote.call(:deleteNote, @entity.guid)
         end
@@ -103,6 +111,8 @@ module Evertils
           @evernote.call(:expungeNote, @entity.guid)
         end
 
+        #
+        # @since 0.2.0
         def expunge
           deprecation_notice('0.2.9')
 
@@ -111,11 +121,13 @@ module Evertils
 
         #
         # @since 0.2.9
-        def move_to(notebook, note)
+        def move_to(notebook)
           nb = Evertils::Common::Entity::Notebook.new
           target = nb.find(notebook)
-          puts Evertils::Common::Entity::Notebooks.new.all.inspect
-          puts target.inspect
+          
+          @entity.notebookGuid = target.guid
+          
+          @evernote.call(:updateNote, @entity)
         end
 
         #
@@ -130,6 +142,8 @@ module Evertils
           @evernote.call(:stopSharingNote, @entity.guid)
         end
 
+        #
+        # @since 0.2.0
         def find(name)
           @entity = nil
 
