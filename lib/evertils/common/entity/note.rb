@@ -125,8 +125,8 @@ module Evertils
           nb = Evertils::Common::Entity::Notebook.new
           target = nb.find(notebook)
           
-          @entity.notebookGuid = target.guid
-          
+          @entity.notebookGuid = target.prop(:guid)
+
           @evernote.call(:updateNote, @entity)
         end
 
