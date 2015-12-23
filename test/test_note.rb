@@ -12,6 +12,7 @@ class NoteTest < Minitest::Test
     @entity.create(note_name, 'Test Body')
 
     assert @entity.exists?(note_name)
+    assert_nil @entity.exists?("ET: A note that certainly won't exist")
 
     @entity.expunge(note_name)
   end
