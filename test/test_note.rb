@@ -30,13 +30,16 @@ class NoteTest < Minitest::Test
     test_note = @entity.create(note_name, 'Test Body')
 
     assert test_note.share, "Note \"#{note_name}\" was unable to be shared"
+
+    test_note.expunge!
   end
 
   def test_note_unshare
-    note_name = "ET: Shared Note"
-    test_note = @entity.find(note_name)
+    note_name = "ET: Unshared Note (grammar lolz)"
+    test_note = @entity.create(note_name, 'Test Body')
 
-    assert test_note, "Shared note exists (it shouldn't)"
+    test_note.share
+
     assert_nil test_note.unshare, "Note \"#{note_name}\" could not be unshared"
 
     test_note.expunge!
