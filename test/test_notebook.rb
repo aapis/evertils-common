@@ -11,13 +11,9 @@ class NotebookTest < Minitest::Test
     nb_name = "ET: Sample Notebook"
     @entity.create(nb_name)
 
-    assert @entity.find(nb_name)
+    assert @entity.find(nb_name), "Notebook \"#{nb_name}\" not found"
 
     @entity.expunge(nb_name)
-  end
-
-  def test_notebook_not_found
-    assert_nil @entity.find('ET: Invalid Notebook Name')
   end
   
 end

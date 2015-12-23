@@ -8,26 +8,15 @@ class SimpleQueriesTest < Minitest::Test
   end
   
   def test_notebooks
-    assert @entity.notebooks.is_a?(Array)
-    assert @entity.notebooks.size > 0
-  end
-
-  def test_tags
-    assert @entity.tags.is_a?(Array)
-    assert @entity.tags.size > 0
+    assert @entity.notebooks.is_a?(Array), 'Incorrect datatype for notebooks.all'
+    assert @entity.notebooks.size > 0, 'Incorrect number of results for notebooks.all'
   end
 
   def test_create_note
     note = @entity.create_note("Sample title", "Sample body")
 
-    refute_nil note
-    assert @entity.destroy_note(note[:note].title)
-
+    refute_nil note, 'Unable to create note "Sample title"'
+    assert @entity.destroy_note(note[:note].title), 'Unable to destroy note "Sample title"'
   end
 
-  def test_tags
-    assert @entity.tags.is_a?(Array)
-    assert @entity.tags.size > 0
-  end
-  
 end

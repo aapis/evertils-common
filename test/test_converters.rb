@@ -8,7 +8,7 @@ class ConvertersTest < Minitest::Test
   def test_yaml_to_enml_from_file
     conv = Evertils::Common::Converter::YamlToEnml.new
 
-    conv.from_file('/Users/ryanpriebe/test.yml')
+    assert conv.from_file('/Users/ryanpriebe/test.yml'), 'Could not convert from YAML file'
   end
 
   #
@@ -16,13 +16,13 @@ class ConvertersTest < Minitest::Test
   def test_yaml_to_enml_from_string
     conv = Evertils::Common::Converter::YamlToEnml.new
 
-    conv.from_string('name: HF2
+    assert conv.from_string('name: HF2
 children:
   - Accounts
   - Agendas
   - Design Documents
   - Interviews/HR
-  - Notes + Documentation')
+  - Notes + Documentation'), 'Could not convert from YAML string'
   end
 
 end

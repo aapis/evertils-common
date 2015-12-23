@@ -8,7 +8,7 @@ class SyncTest < Minitest::Test
   end
 
   def test_sync
-    assert @entity.state
+    assert @entity.state, 'Could not determine sync status'
   end
   
 end
