@@ -17,10 +17,10 @@ module Evertils
         end
 
         def create(name)
-          @entity = ::Evernote::EDAM::Type::Tag.new
-          @entity.name = name
+          tag = ::Evernote::EDAM::Type::Tag.new
+          tag.name = name
 
-          @evernote.call(:createTag, @entity)
+          @entity = @evernote.call(:createTag, tag)
 
           self if @entity
         end
