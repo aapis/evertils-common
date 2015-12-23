@@ -78,7 +78,7 @@ module Evertils
           notes_by_date = []
           
           pool.notes.each do |note|
-            note_datetime = DateTime.strptime(note.send(period).to_s[0...-3], '%s')
+            note_datetime = note_date(note, period)
 
             notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
           end
