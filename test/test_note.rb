@@ -36,7 +36,7 @@ class NoteTest < Minitest::Test
     note_name = "ET: Shared Note"
     test_note = @entity.find(note_name)
 
-    assert test_note, "Shared note does not exist"
+    assert test_note, "Shared note exists (it shouldn't)"
     assert_nil test_note.unshare, "Note \"#{note_name}\" could not be unshared"
 
     test_note.expunge!
@@ -52,7 +52,7 @@ class NoteTest < Minitest::Test
   end
 
   def test_note_move
-    note_name = "ET: Soft delete this note"
+    note_name = "ET: Move this note"
     test_note = @entity.create(note_name, 'Test Body')
 
     assert test_note.move_to('Backup'), "Note \"#{note_name}\" could not be moved to target"
