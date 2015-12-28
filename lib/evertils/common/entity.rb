@@ -5,6 +5,8 @@ module Evertils
     module Entity
       class Base
 
+        attr_accessor :evernote
+
         def initialize(en = nil)
           if en.is_a?(Authentication)
             @evernote = en
