@@ -33,13 +33,14 @@ module Evertils
 
             conf.each do |stack_name|
               stack_name.last.each_pair do |key, arr|
+                puts "Creating: #{stack_name.first}/#{key}..."
                 ch_nb = nb.create(key, stack_name.first)
 
                 arr.each do |child_note|
                   child_note.each_pair do |name, options|
-                    note.create(name, "Body for #{name.downcase}", ch_nb, nil, false, options['created_on'])
+                    puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
+                    #note.create(name, "Body for #{name.downcase}", ch_nb, nil, false, options['created_on'])
                   end
-
                 end
               end
             end
