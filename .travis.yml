@@ -2,3 +2,5 @@ language: ruby
 rvm:
  - "2.2.1"
 script: bundle exec rake test
+env:
+  - EVERTILS_SB_TOKEN="S=s1:U=91e14:E=1594288f829:C=151ead7c908:P=1cd:A=en-devtoken:V=2:H=f688ac96519d5c525929073624a38ac2"
