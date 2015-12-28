@@ -62,7 +62,7 @@ module Evertils
           # setup note properties
           our_note.title = title
           our_note.content = n_body
-          our_note.created = created_on if !created_on.nil?
+          our_note.created = DateTime.parse(created_on) if !created_on.nil?
 
           if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
@@ -85,6 +85,8 @@ module Evertils
           rescue ::Evernote::EDAM::Error::EDAMNotFoundException
             ## Parent Notebook GUID doesn't correspond to an actual notebook
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
+          rescue ArgumentError => e
+            Notify.error e.backtrace
           end
 
           Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created")

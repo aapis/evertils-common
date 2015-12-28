@@ -39,7 +39,7 @@ module Evertils
                 arr.each do |child_note|
                   child_note.each_pair do |name, options|
                     puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
-                    #note.create(name, "Body for #{name.downcase}", ch_nb, nil, false, options['created_on'])
+                    note.create(name, "Body for test note", ch_nb, nil, false, options['created_on'])
                   end
                 end
               end
@@ -49,10 +49,10 @@ module Evertils
           else
             raise ArgumentError, "File not found: #{full_path}"
           end
-        rescue ArgumentError => e
-          puts e.message
         rescue => e
+          puts "IN SEED 2"
           puts e.inspect
+          puts e.backtrace
         end
         
         exit
