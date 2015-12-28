@@ -8,10 +8,9 @@ require 'evertils/common'
 require 'evertils/test/base'
 
 module Evertils
-  module Test
+  module Common
 
     EVERNOTE_HOST = 'sandbox.evernote.com'
-    EVERNOTE_DEVELOPER_TOKEN = ENV['EVERTILS_TOKEN']
 
   end
 end
