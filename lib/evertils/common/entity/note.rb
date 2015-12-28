@@ -26,7 +26,7 @@ module Evertils
 
         #
         # @since 0.2.0
-        def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+        def create(title, body, parent_notebook = nil, file = nil, share_note = false, created_on = nil)
           @entity = nil
 
           # final output
@@ -64,9 +64,9 @@ module Evertils
           our_note.content = n_body
           our_note.created = created_on if !created_on.nil?
 
-          if !p_notebook_name.is_a? ::Evernote::EDAM::Type::Notebook
+          if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
-            parent_notebook = nb.find(p_notebook_name)
+            parent_notebook = nb.find(parent_notebook)
             parent_notebook = nb.default if parent_notebook.nil?
           end
           
