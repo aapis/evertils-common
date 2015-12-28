@@ -58,9 +58,13 @@ class NoteTest < Evertils::Test::Base
   def test_note_move
     note_name = "ET: Move this note"
     test_note = @entity.create(note_name, 'Test Body')
+    nb_entity = Evertils::Common::Entity::Notebook.new
+
+    test_nb = nb_entity.create('Backup')
 
     assert test_note.move_to('Backup'), "Note \"#{note_name}\" could not be moved to target"
 
+    test_nb.expunge!
     test_note.expunge!
   end
 
