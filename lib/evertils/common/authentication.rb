@@ -16,9 +16,7 @@ module Evertils
           userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
           @@user = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
 
-          versionOK = @@user.checkVersion("evernote-data",
-                     ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR,
-                     ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+          versionOK = @@user.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
 
           @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
           @shardId = user.shardId
