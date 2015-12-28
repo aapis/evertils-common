@@ -15,9 +15,18 @@ module Evertils
         # @since 0.2.8
         def files(*files)
           date = DateTime.now
+          backup_notebook_name = 'Backup'
           nm = Entity::Note.new
+          
+          # create the backup notebook if it does not exist
+          nb_entity = Entity::Notebook.new
+          nb = nb_entity.find(backup_notebook_name)
 
-          @entity = nm.create("Backup: #{date}", '', 'Backup', files)
+          if nb_entity.find(backup_notebook_name).nil?
+            nb = nb_entity.create(backup_notebook_name)
+          end
+
+          @entity = nm.create("Backup: #{date}", "", nb, files)
         end
 
         #
