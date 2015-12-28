@@ -5,8 +5,13 @@ module Evertils
     module Entity
       class Base
 
-        def initialize
-          @evernote = Authentication.new
+        def initialize(en = nil)
+          if en.is_a?(Authentication)
+            @evernote = en
+          else
+            @evernote = Authentication.new
+          end
+
           self
         end
 
