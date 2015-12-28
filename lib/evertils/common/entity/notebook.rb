@@ -72,7 +72,7 @@ module Evertils
         end
 
         #
-        # @since 0.2.9
+        # @since 0.3.0
         def entity
           @entity
         end

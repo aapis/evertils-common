@@ -163,6 +163,12 @@ module Evertils
         end
         alias_method :find_by_name, :find
 
+        #
+        # @since 0.3.0
+        def entity
+          @entity
+        end
+
       end
     end
   end
