@@ -15,10 +15,22 @@ require 'evertils/common/query/time'
 require 'evertils/common/converter/yaml_to_enml'
 
 module Evertils
-  module Common
 
-    EVERNOTE_HOST = 'www.evernote.com'
-    EVERNOTE_DEVELOPER_TOKEN = ENV['EVERTILS_TOKEN']
-
+  #
+  # @since 0.3.0
+  def self.token
+    ENV['EVERTILS_TOKEN']
   end
+
+  #
+  # @since 0.3.0
+  def self.host
+    'www.evernote.com'
+  end
+
+  # define Common namespace
+  # @since 0.3.0
+  module Common
+  end
+
 end

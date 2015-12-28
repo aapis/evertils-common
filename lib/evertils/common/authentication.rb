@@ -6,11 +6,11 @@ module Evertils
 
       def initialize
         begin
-          if Evertils::Common::EVERNOTE_DEVELOPER_TOKEN.nil?
+          if Evertils.token.nil?
             Notify.error("Evernote developer token is not configured properly!\n$EVERTILS_TOKEN == nil")
           end
 
-          userStoreUrl = "https://#{Evertils::Common::EVERNOTE_HOST}/edam/user"
+          userStoreUrl = "https://#{Evertils.host}/edam/user"
 
           userStoreTransport = Thrift::HTTPClientTransport.new(userStoreUrl)
           userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
@@ -25,7 +25,7 @@ module Evertils
             Notify.error("Evernote API requires an update.  Latest version is #{@version}")
           end
 
-          noteStoreUrl = @@user.getNoteStoreUrl(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          noteStoreUrl = @@user.getNoteStoreUrl(Evertils.token)
 
           noteStoreTransport = Thrift::HTTPClientTransport.new(noteStoreUrl)
           noteStoreProtocol = Thrift::BinaryProtocol.new(noteStoreTransport)
@@ -51,14 +51,14 @@ module Evertils
       end
 
       def user
-        @@user.getUser(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        @@user.getUser(Evertils.token)
       end
 
       def call(func, *args)
         if args.size > 0
-          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, *args)
+          @store.method(func.to_s).call(Evertils.token, *args)
         else
-          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          @store.method(func.to_s).call(Evertils.token)
         end
       end
     end

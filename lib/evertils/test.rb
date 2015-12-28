@@ -1,16 +1,23 @@
-require 'evernote-thrift'
-require 'notifaction'
-require 'yaml'
-require 'mime/types'
-require 'date'
-
 require 'evertils/common'
 require 'evertils/test/base'
 
 module Evertils
-  module Common
 
-    EVERNOTE_HOST = 'sandbox.evernote.com'
-
+  #
+  # @since 0.3.0
+  def self.token
+    ENV['EVERTILS_SB_TOKEN']
   end
+
+  #
+  # @since 0.3.0
+  def self.host
+    'sandbox.evernote.com'
+  end
+
+  # define Test namespace
+  # @since 0.3.0
+  module Test
+  end
+
 end
