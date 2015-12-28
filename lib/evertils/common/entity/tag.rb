@@ -5,7 +5,7 @@ module Evertils
 
         def find(name)
           @entity = nil
-          tags = Tags.new.all
+          tags = Tags.new(@evernote).all
 
           tags.each do |tag|
             if tag.name == name.to_s
