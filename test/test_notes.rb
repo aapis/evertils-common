@@ -1,9 +1,10 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class NotesTest < Minitest::Test
+class NotesTest < Evertils::Test::Base
 
   def setup
+    super
+
     @entities = Evertils::Common::Entity::Notes.new
   end
 

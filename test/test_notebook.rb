@@ -1,9 +1,10 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class NotebookTest < Minitest::Test
+class NotebookTest < Evertils::Test::Base
 
   def setup
+    super
+
     @entity = Evertils::Common::Entity::Notebook.new
   end
 

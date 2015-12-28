@@ -1,9 +1,10 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class SimpleQueriesTest < Minitest::Test
+class SimpleQueriesTest < Evertils::Test::Base
 
   def setup
+    super
+
     @entity = Evertils::Common::Query::Simple.new
   end
   
@@ -17,6 +18,50 @@ class SimpleQueriesTest < Minitest::Test
 
     refute_nil note, 'Unable to create note "Sample title"'
     assert note.expunge!, 'Unable to destroy note "Sample title"'
+  end
+
+  def test_tags
+
+  end
+
+  def test_notebook_by_name
+
+  end
+
+  def test_notes_by_notebook
+
+  end
+
+  def test_create_notebook_by_stack
+
+  end
+
+  def test_create_note_from
+
+  end
+
+  def test_create_notebooks_from
+
+  end
+
+  def test_create_notebook
+
+  end
+
+  def test_find_note
+
+  end
+
+  def test_note_exists
+
+  end
+
+  def test_create_note
+
+  end
+
+  def test_destroy_note
+
   end
 
 end

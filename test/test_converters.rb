@@ -1,7 +1,6 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class ConvertersTest < Minitest::Test
+class ConvertersTest < Evertils::Test::Base
 
   #
   # @since 0.2.9
