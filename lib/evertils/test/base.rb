@@ -95,7 +95,8 @@ module Evertils
 
             puts "Deleting all notebooks..."
             notebooks = nb.all
-            default = nbm.create('Default')
+            default = nbm.find_or_create('Default')
+
             notebooks.each do |nb|
               next if nb.guid == default.prop(:guid)
               auth.call(:expungeNotebook, nb.guid)

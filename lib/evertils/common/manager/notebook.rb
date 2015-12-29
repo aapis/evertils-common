@@ -17,6 +17,18 @@ module Evertils
           entity.find(name)
         end
 
+        #
+        # @since 0.3.0
+        def find_or_create(name, stack = nil)
+          search_result = find(name)
+
+          if !search_result
+            note = create(name, stack)
+          else
+            note = search_result
+          end
+        end
+
       end
     end
   end
