@@ -82,30 +82,23 @@ module Evertils
           if File.exist? full_path
             conf = YAML::load(File.open(full_path))
             
-            nb = Evertils::Common::Entity::Notebook.new
-            nm = Evertils::Common::Entity::Note.new
+            nb = Evertils::Common::Entity::Notebooks.new
+            nbm = Evertils::Common::Manager::Notebook.new
+            auth = Evertils::Common::Authentication.instance
             tm = Evertils::Common::Entity::Tags.new
 
             puts "Deleting all tags..."
             tags = tm.all
             tags.each do |tag|
-              nb.evernote.call(:expungeTag, tag.guid)
+              auth.call(:expungeTag, tag.guid)
             end
 
-            conf.each do |stack_name|
-              stack_name.last.each_pair do |key, arr|
-                puts "Deleting: #{stack_name.first}/#{key}-#{@@test_time}..."
-                ch_nb = nb.find("#{stack_name.first}/#{key}-#{@@test_time}")
-                ch_nb.expunge! if ch_nb
-
-                arr.each do |child_note|
-                  child_note.each_pair do |name, options|
-                    puts "Deleting: #{stack_name.first}/#{key}/#{name}.note..."
-                    note = nm.find(name)
-                    note.expunge! if note
-                  end
-                end
-              end
+            puts "Deleting all notebooks..."
+            notebooks = nb.all
+            default = nbm.create('Default')
+            notebooks.each do |nb|
+              next if nb.guid == default.prop(:guid)
+              auth.call(:expungeNotebook, nb.guid)
             end
 
             puts "Sample data deleted"
