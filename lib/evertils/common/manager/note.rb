@@ -3,13 +3,18 @@ module Evertils
     module Manager
       class Note < Manager::Base
 
+        #
+        # @since 0.3.0
         def create(config)
-          note = Evertils::Common::Entity::Note.new
-          note.create(config[:name], config[:body], config[:notebook], config[:files], config[:shared], config[:created_on])
+          entity = Evertils::Common::Entity::Note.new
+          entity.create(config[:name], config[:body], config[:notebook], config[:files], config[:shared], config[:created_on])
         end
 
+        #
+        # @since 0.3.0
         def find(name)
-
+          entity = Evertils::Common::Entity::Note.new
+          entity.find(name)
         end
 
       end

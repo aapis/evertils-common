@@ -10,7 +10,12 @@ require 'evertils/common/query'
 require 'evertils/common/converter'
 require 'evertils/common/manager'
 require 'evertils/common/version'
+
 require 'evertils/common/manager/note'
+require 'evertils/common/manager/notebook'
+require 'evertils/common/manager/sync'
+require 'evertils/common/manager/tag'
+
 require 'evertils/common/entity/notebook'
 require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notes'
@@ -18,6 +23,7 @@ require 'evertils/common/entity/note'
 require 'evertils/common/entity/tag'
 require 'evertils/common/entity/tags'
 require 'evertils/common/entity/sync'
+
 require 'evertils/common/converter/yaml_to_enml'
 
 module Evertils
