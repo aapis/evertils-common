@@ -1,6 +1,7 @@
 module Evertils
   module Common
     class Authentication
+      include Singleton
 
       attr_accessor :store, :shardId, :version
 

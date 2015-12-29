@@ -5,16 +5,12 @@ module Evertils
     module Manager
       class Base
 
-        attr_accessor :evernote
+        attr_accessor :api
 
         #
         # @since 0.3.0
-        def initialize(en = nil)
-          if en.is_a?(Authentication)
-            @evernote = en
-          else
-            @evernote = Authentication.new
-          end
+        def initialize
+          @api = Authentication.instance
 
           self
         end
