@@ -1,8 +1,3 @@
-require 'evertils/common/entity/notebook'
-require 'evertils/common/entity/notebooks'
-require 'evertils/common/entity/notes'
-require 'evertils/common/entity/note'
-
 module Evertils
   module Common
     module Query
