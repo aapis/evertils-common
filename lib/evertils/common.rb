@@ -11,6 +11,10 @@ require 'evertils/common/converter'
 require 'evertils/common/manager'
 require 'evertils/common/version'
 
+require 'evertils/common/query/simple'
+require 'evertils/common/query/time'
+require 'evertils/common/query/backup'
+
 require 'evertils/common/manager/note'
 require 'evertils/common/manager/notebook'
 require 'evertils/common/manager/sync'
