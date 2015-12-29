@@ -16,6 +16,10 @@ module Evertils
           userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
           @@user = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
 
+          if Evertils.is_test?
+            puts "TEST USER: #{info[:user]}"
+          end
+
           versionOK = @@user.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
 
           @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
