@@ -65,7 +65,7 @@ module Evertils
           our_note.created = created_on if !created_on.is_a?(DateTime)
 
           if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
-            nb = Entity::Notebook.new
+            nb = Entity::Notebook.new(@evernote)
             parent_notebook = nb.find(parent_notebook)
             parent_notebook = nb.default if parent_notebook.nil?
           end
@@ -124,7 +124,7 @@ module Evertils
         #
         # @since 0.2.9
         def move_to(notebook)
-          nb = Evertils::Common::Entity::Notebook.new
+          nb = Evertils::Common::Entity::Notebook.new(@evernote)
           target = nb.find(notebook)
           
           @entity.notebookGuid = target.prop(:guid)
@@ -164,6 +164,13 @@ module Evertils
           self if @entity
         end
         alias_method :find_by_name, :find
+
+        #
+        # @since 0.3.0
+        def tag(name)
+          @entity.tagNames = [name]
+          @evernote.call(:updateNote, @entity)
+        end
 
         #
         # @since 0.3.0
