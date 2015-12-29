@@ -5,7 +5,7 @@ class NotebookTest < Evertils::Test::Base
   def setup
     super
 
-    @entity = Evertils::Common::Entity::Notebook.new
+    @entity = Evertils::Common::Manager::Notebook.new
   end
 
   def test_notebook_found
