@@ -9,6 +9,7 @@ module Evertils
       def self.before
         puts "Seeding test data"
         inst = Base.new(nil)
+        inst.setup
         inst.seed
       end
 
@@ -17,6 +18,7 @@ module Evertils
       def self.after
         puts "Deleting test data"
         inst = Base.new(nil)
+        inst.setup
         inst.clean
       end
 
@@ -81,11 +83,18 @@ module Evertils
             
             nb = Evertils::Common::Entity::Notebook.new(@evernote)
             nm = Evertils::Common::Entity::Note.new(@evernote)
+            tm = Evertils::Common::Entity::Tags.new(@evernote)
+
+            puts "Deleting all tags..."
+            tags = tm.all
+            tags.each do |tag|
+              @evernote.call(:expungeTag, tag.guid)
+            end
 
             conf.each do |stack_name|
               stack_name.last.each_pair do |key, arr|
                 puts "Deleting: #{stack_name.first}/#{key}..."
-                ch_nb = nb.find(key)
+                ch_nb = nb.find("#{stack_name.first}/#{key}")
                 ch_nb.expunge! if ch_nb
 
                 arr.each do |child_note|
