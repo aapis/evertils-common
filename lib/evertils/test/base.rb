@@ -39,7 +39,10 @@ module Evertils
                 arr.each do |child_note|
                   child_note.each_pair do |name, options|
                     puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
-                    note.create(name, "Body for test note", ch_nb, nil, false, options['created_on'])
+                    parsed = DateTime.parse(options['created_on'])
+                    
+                    created_on = (parsed.to_time.to_i.to_s + "000").to_i
+                    note.create(name, "Body for test note", ch_nb, nil, false, created_on)
                   end
                 end
               end

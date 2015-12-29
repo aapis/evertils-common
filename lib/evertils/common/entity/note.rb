@@ -62,7 +62,7 @@ module Evertils
           # setup note properties
           our_note.title = title
           our_note.content = n_body
-          our_note.created = DateTime.parse(created_on) if !created_on.nil?
+          our_note.created = created_on if !created_on.is_a?(DateTime)
 
           if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
