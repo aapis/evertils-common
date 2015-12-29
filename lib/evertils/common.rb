@@ -28,6 +28,12 @@ module Evertils
     'www.evernote.com'
   end
 
+  #
+  # @since 0.3.0
+  def self.is_test?
+    false
+  end
+
   # define Common namespace
   # @since 0.3.0
   module Common
