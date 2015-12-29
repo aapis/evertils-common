@@ -9,6 +9,8 @@ class NotebookTest < Evertils::Test::Base
   end
 
   def test_notebook_found
+    skip("Potentially not required, skipping for now")
+    
     nb_name = "ET: Sample Notebook"
     test_notebook = @entity.find_or_create(nb_name)
 
