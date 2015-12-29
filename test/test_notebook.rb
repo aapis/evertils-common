@@ -10,7 +10,7 @@ class NotebookTest < Evertils::Test::Base
 
   def test_notebook_found
     nb_name = "ET: Sample Notebook"
-    test_notebook = @entity.create(nb_name)
+    test_notebook = @entity.find_or_create(nb_name)
 
     assert test_notebook, "Notebook \"#{nb_name}\" not found"
 
