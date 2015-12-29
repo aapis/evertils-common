@@ -15,6 +15,12 @@ module Evertils
     'sandbox.evernote.com'
   end
 
+  #
+  # @since 0.3.0
+  def self.is_test?
+    true
+  end
+
   # define Test namespace
   # @since 0.3.0
   module Test
