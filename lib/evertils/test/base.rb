@@ -27,6 +27,8 @@ module Evertils
       def setup
         entity = Evertils::Common::Manager::Sync.new
 
+        @@test_time = Time.now.to_i
+
         if !entity.state.is_a?(Evernote::EDAM::NoteStore::SyncState)
           puts 'Could not determine connection to the Evernote API, exiting'
           exit(1)
@@ -47,8 +49,8 @@ module Evertils
 
             conf.each do |stack_name|
               stack_name.last.each_pair do |key, arr|
-                puts "Creating: #{stack_name.first}/#{key}..."
-                ch_nb = nb.create(key, stack_name.first)
+                puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
+                ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
 
                 arr.each do |child_note|
                   child_note.each_pair do |name, options|
@@ -92,8 +94,8 @@ module Evertils
 
             conf.each do |stack_name|
               stack_name.last.each_pair do |key, arr|
-                puts "Deleting: #{stack_name.first}/#{key}..."
-                ch_nb = nb.find("#{stack_name.first}/#{key}")
+                puts "Deleting: #{stack_name.first}/#{key}-#{@@test_time}..."
+                ch_nb = nb.find("#{stack_name.first}/#{key}-#{@@test_time}")
                 ch_nb.expunge! if ch_nb
 
                 arr.each do |child_note|
