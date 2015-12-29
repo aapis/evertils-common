@@ -7,11 +7,15 @@ Rake::TestTask.new do |t|
 end
 
 task :before do
-  Evertils::Test::Base.before
+  if ENV['TEST'].nil?
+    Evertils::Test::Base.before
+  end
 end
 
 task :after do
-  Evertils::Test::Base.after
+  if ENV['TEST'].nil?
+    Evertils::Test::Base.after
+  end
 end
 
 # hack from
