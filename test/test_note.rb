@@ -26,6 +26,18 @@ class NoteTest < Evertils::Test::Base
     test_note.expunge!
   end
 
+  def test_note_tag
+    note_name = "ET: Tagged Note"
+    test_note = @entity.create(note_name, 'Test Body')
+    tag_manager = Evertils::Common::Entity::Tag.new(@entity.evernote)
+    tag = tag_manager.create('et_test_tag')
+
+    assert test_note.tag(tag.prop(:name)), "Note \"#{note_name}\" could not be tagged"
+
+    test_note.expunge!
+    tag.expunge!
+  end
+
   def test_note_share
     note_name = "ET: Shared Note"
     test_note = @entity.create(note_name, 'Test Body')
@@ -58,11 +70,11 @@ class NoteTest < Evertils::Test::Base
   def test_note_move
     note_name = "ET: Move this note"
     test_note = @entity.create(note_name, 'Test Body')
-    nb_entity = Evertils::Common::Entity::Notebook.new
+    nb_entity = Evertils::Common::Entity::Notebook.new(@entity.evernote)
 
-    test_nb = nb_entity.create('Backup')
+    test_nb = nb_entity.create('Backup2')
 
-    assert test_note.move_to('Backup'), "Note \"#{note_name}\" could not be moved to target"
+    assert test_note.move_to('Backup2'), "Note \"#{note_name}\" could not be moved to target"
 
     test_nb.expunge!
     test_note.expunge!
