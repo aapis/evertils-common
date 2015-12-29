@@ -9,7 +9,7 @@ module Evertils
         # @since 0.2.0
         def find(name)
           @entity = nil
-          notebooks = Notebooks.new(@evernote).all
+          notebooks = Notebooks.new.all
 
           notebooks.each do |notebook|
             if notebook.name == name.to_s

@@ -9,7 +9,7 @@ module Evertils
 
         def create_from_yml(full_path)
           begin
-            nb = Notebook.new(@evernote)
+            nb = Notebook.new
 
             if File.exists? full_path
               conf = YAML::load(File.open(full_path))

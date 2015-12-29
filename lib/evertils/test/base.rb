@@ -25,8 +25,7 @@ module Evertils
       #
       # @since 0.3.0
       def setup
-        entity = Evertils::Common::Entity::Sync.new
-        @evernote = entity.evernote
+        entity = Evertils::Common::Manager::Sync.new
 
         if !entity.state.is_a?(Evernote::EDAM::NoteStore::SyncState)
           puts 'Could not determine connection to the Evernote API, exiting'
@@ -43,8 +42,8 @@ module Evertils
           if File.exist? full_path
             conf = YAML::load(File.open(full_path))
             
-            nb = Evertils::Common::Entity::Notebook.new(@evernote)
-            note = Evertils::Common::Entity::Note.new(@evernote)
+            nb = Evertils::Common::Entity::Notebook.new
+            note = Evertils::Common::Entity::Note.new
 
             conf.each do |stack_name|
               stack_name.last.each_pair do |key, arr|
@@ -81,14 +80,14 @@ module Evertils
           if File.exist? full_path
             conf = YAML::load(File.open(full_path))
             
-            nb = Evertils::Common::Entity::Notebook.new(@evernote)
-            nm = Evertils::Common::Entity::Note.new(@evernote)
-            tm = Evertils::Common::Entity::Tags.new(@evernote)
+            nb = Evertils::Common::Entity::Notebook.new
+            nm = Evertils::Common::Entity::Note.new
+            tm = Evertils::Common::Entity::Tags.new
 
             puts "Deleting all tags..."
             tags = tm.all
             tags.each do |tag|
-              @evernote.call(:expungeTag, tag.guid)
+              #@evernote.call(:expungeTag, tag.guid)
             end
 
             conf.each do |stack_name|
