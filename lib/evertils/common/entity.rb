@@ -3,6 +3,8 @@ module Evertils
     module Entity
       class Base
 
+        attr_accessor :evernote
+
         def initialize
           @evernote = Authentication.instance
         end
