@@ -1,6 +1,6 @@
 # Evertils::Common
 
-[![Code Climate](https://codeclimate.com/github/aapis/evertils-common/badges/gpa.svg)](https://codeclimate.com/github/aapis/evertils-common)
+[![Code Climate](https://codeclimate.com/github/aapis/evertils-common/badges/gpa.svg)](https://codeclimate.com/github/aapis/evertils-common) [![Build Status](https://travis-ci.org/aapis/evertils-common.svg?branch=master)](https://travis-ci.org/aapis/evertils-common)
 
 Evertils::Common is an abstraction library for interacting with the Evernote API.
 
