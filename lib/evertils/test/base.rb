@@ -87,7 +87,7 @@ module Evertils
             puts "Deleting all tags..."
             tags = tm.all
             tags.each do |tag|
-              #@evernote.call(:expungeTag, tag.guid)
+              nb.evernote.call(:expungeTag, tag.guid)
             end
 
             conf.each do |stack_name|
@@ -106,7 +106,7 @@ module Evertils
               end
             end
 
-            puts "Sample data seeded"
+            puts "Sample data deleted"
           else
             raise ArgumentError, "File not found: #{full_path}"
           end
