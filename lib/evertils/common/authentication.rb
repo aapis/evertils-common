@@ -60,10 +60,15 @@ module Evertils
       end
 
       def call(func, *args)
-        if args.size > 0
-          @store.method(func.to_s).call(Evertils.token, *args)
-        else
-          @store.method(func.to_s).call(Evertils.token)
+        begin
+          if args.size > 0
+            @store.method(func.to_s).call(Evertils.token, *args)
+          else
+            @store.method(func.to_s).call(Evertils.token)
+          end
+        rescue Evernote::EDAM::Error::EDAMSystemException => e
+          Notify.warning e.inspect
+          nil
         end
       end
     end
