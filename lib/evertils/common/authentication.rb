@@ -1,76 +1,140 @@
+require 'singleton'
+
 module Evertils
   module Common
     class Authentication
       include Singleton
 
-      attr_accessor :store, :shardId, :version
-
       def initialize
         begin
-          if Evertils.token.nil?
-            Notify.error("Evernote developer token is not configured properly!\n$EVERTILS_TOKEN == nil")
-          end
+          # attempt to login as the Evernote user
+          prepare_user
 
-          userStoreUrl = "https://#{Evertils.host}/edam/user"
+          # quit with message if requirements not met
+          Notify.error("Evernote developer token is not configured properly!\n$EVERTILS_TOKEN == nil") if Evertils.token.nil?
+          Notify.error("Evernote API requires an update.  Latest version is #{@version}") if requires_update
 
-          userStoreTransport = Thrift::HTTPClientTransport.new(userStoreUrl)
-          userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
-          @@user = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
-
-          if Evertils.is_test?
-            puts "TEST USER: #{info[:user]}"
-          end
-
-          versionOK = @@user.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
-
-          @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
-          @shardId = user.shardId
-
-          if !versionOK
-            Notify.error("Evernote API requires an update.  Latest version is #{@version}")
-          end
-
-          noteStoreUrl = @@user.getNoteStoreUrl(Evertils.token)
-
-          noteStoreTransport = Thrift::HTTPClientTransport.new(noteStoreUrl)
-          noteStoreProtocol = Thrift::BinaryProtocol.new(noteStoreTransport)
-          @store = ::Evernote::EDAM::NoteStore::NoteStore::Client.new(noteStoreProtocol)
+          # prepare the main data model access point
+          prepare_note_store
         rescue Evernote::EDAM::Error::EDAMSystemException => e
-          Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
-
-          case e.errorCode
-          when 19
-            minutes = (e.rateLimitDuration/60).to_i
-            Notify.warning("You are rate limited!  Wait #{minutes} minutes")
-            exit(0)
-          end
+          handle_edam_errors(e)
         end
       end
 
       def info
         {
-          :user => "#{user.name} (#{user.username}) - ID##{user.id}",
-          :shard => user.shardId,
+          :user => "#{@user.name} (#{@user.username}) - ID##{@user.id}",
+          :shard => @user.shardId,
           :api_version => @version,
         }
-      end
-
-      def user
-        @@user.getUser(Evertils.token)
       end
 
       def call(func, *args)
         begin
           if args.size > 0
-            @store.method(func.to_s).call(Evertils.token, *args)
+            @noteStore.method(func.to_s).call(Evertils.token, *args)
           else
-            @store.method(func.to_s).call(Evertils.token)
+            @noteStore.method(func.to_s).call(Evertils.token)
           end
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           Notify.warning e.inspect
           nil
         end
       end
+
+      def call_user(func, *args)
+        begin
+          if args.size > 0
+            @userStore.method(func.to_s).call(Evertils.token, *args)
+          else
+            @userStore.method(func.to_s).call(Evertils.token)
+          end
+        rescue Evernote::EDAM::Error::EDAMSystemException => e
+          Notify.warning e.inspect
+          nil
+        end
+      end
+
+      private
+
+      def prepare_user
+        userStoreUrl = "https://#{Evertils.host}/edam/user"
+
+        userStoreTransport = Thrift::HTTPClientTransport.new(userStoreUrl)
+        userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
+        @userStore = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
+        @user = call_user(:getUser)
+
+        if Evertils.is_test?
+          Notify.spit "TEST USER: #{info[:user]}"
+        end
+      end
+
+      def prepare_note_store
+        noteStoreUrl = call_user(:getNoteStoreUrl)
+
+        noteStoreTransport = Thrift::HTTPClientTransport.new(noteStoreUrl)
+        noteStoreProtocol = Thrift::BinaryProtocol.new(noteStoreTransport)
+        @noteStore = ::Evernote::EDAM::NoteStore::NoteStore::Client.new(noteStoreProtocol)
+      end
+
+      def requires_update
+        entity = @userStore.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+
+        @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
+
+        !entity
+      end
+
+      def handle_edam_errors(e)
+        Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
+
+        case e.errorCode
+        when 1
+          message = 'An unknown error occurred'
+        when 2
+          message = 'The format of the request data was incorrect'
+        when 3
+          message = 'Not permitted to perform action'
+        when 4
+          message = 'Unexpected problem with the service'
+        when 5
+          message = 'A required parameter/field was absent'
+        when 6
+          message = 'Operation denied due to data model limit'
+        when 7
+          message = 'Operation denied due to user storage limit'
+        when 8
+          message = 'Username and/or password incorrect'
+        when 9
+          message = 'Authentication token expired'
+        when 10
+          message = 'Change denied due to data model conflict'
+        when 11
+          message = 'Content of submitted note was malformed'
+        when 12
+          message = 'Service shard with account data is temporarily down'
+        when 13
+          message = 'Operation denied due to data model limit, where something such as a string length was too short'
+        when 14
+          message = 'Operation denied due to data model limit, where something such as a string length was too long'
+        when 15
+          message = 'Operation denied due to data model limit, where there were too few of something'
+        when 16
+          message = 'Operation denied due to data model limit, where there were too many of something'
+        when 17
+          message = 'Operation denied because it is currently unsupported'
+        when 18
+          message = 'Operation denied because access to the corresponding object is prohibited in response to a take-down notice'
+        when 19
+          minutes = (e.rateLimitDuration/60).to_i
+          message = "You are rate limited!  Wait #{minutes} minutes"
+        end
+        
+        Notify.warning(message)
+        exit(0)
+      end
+
     end
   end
 end
