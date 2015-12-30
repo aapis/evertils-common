@@ -1,0 +1,24 @@
+Food:
+    Fruit:
+        - Oranges:
+            created_on: '2015-04-21'
+        - Apples:
+            created_on: '2015-05-02'
+        - Dragon fruit:
+            created_on: '2015-01-14'
+    Vegetable:
+        - Carrots:
+            created_on: '2015-10-11'
+        - Celery:
+            created_on: '2015-11-08'
+        - Onion:
+            created_on: '2015-12-22'
+Cars:
+    Ford:
+        - Mustang:
+            created_on: '2015-10-11'
+        - Focus:
+            created_on: '2015-08-06'
+    Jaguar:
+        - XJ220:
+            created_on: '2015-06-01'

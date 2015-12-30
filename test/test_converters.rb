@@ -1,22 +1,23 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class ConvertersTest < Minitest::Test
+class ConvertersTest < Evertils::Test::Base
 
-  #
-  # @since 0.2.9
-  def test_yaml_to_enml_from_file
-    conv = Evertils::Common::Converter::YamlToEnml.new
+  def setup
+    super
 
-    assert conv.from_file('/Users/ryanpriebe/test.yml'), 'Could not convert from YAML file'
+    @yml_conv_entity = Evertils::Common::Converter::YamlToEnml.new
   end
+
+  # TODO: Commented out temporarily
+  # @since 0.2.9
+  # def test_yaml_to_enml_from_file
+  #   assert @yml_conv_entity.from_file('/Users/ryanpriebe/test.yml'), 'Could not convert from YAML file'
+  # end
 
   #
   # @since 0.2.9
   def test_yaml_to_enml_from_string
-    conv = Evertils::Common::Converter::YamlToEnml.new
-
-    assert conv.from_string('name: HF2
+    assert @yml_conv_entity.from_string('name: HF2
 children:
   - Accounts
   - Agendas

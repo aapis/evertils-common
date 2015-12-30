@@ -1,15 +1,16 @@
-require 'evertils/common/authentication'
-
 module Evertils
   module Common
     module Entity
       class Base
 
+        attr_accessor :evernote
+
         def initialize
-          @evernote = Authentication.new
-          self
+          @evernote = Authentication.instance
         end
 
+        #
+        # @since 0.2.0
         def has_required_fields(hash, required)
           hash.keys.each do |key|
             required.include? key

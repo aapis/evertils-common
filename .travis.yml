@@ -1,4 +1,13 @@
 language: ruby
 rvm:
  - "2.2.1"
-script: bundle exec rake test
+script: 
+  - bundle exec rake cleanup
+  - bundle exec rake test
+after_failure:
+  - bundle exec rake cleanup
+env:
+  - EVERTILS_SB_TOKEN="S=s1:U=91e14:E=1594288f829:C=151ead7c908:P=1cd:A=en-devtoken:V=2:H=f688ac96519d5c525929073624a38ac2"
+addons:
+  code_climate:
+    repo_token: 68c56c90c9e17fd1da015529e8957ca50855d5b4b3436641449c84ad1d0bddfc

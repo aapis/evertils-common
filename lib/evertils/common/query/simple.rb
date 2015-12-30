@@ -1,76 +1,101 @@
-require 'evertils/common/entity/notebook'
-require 'evertils/common/entity/notebooks'
-require 'evertils/common/entity/notes'
-require 'evertils/common/entity/note'
-require 'evertils/common/entity/tag'
-require 'evertils/common/entity/tags'
-require 'evertils/common/entity/sync'
-
 module Evertils
   module Common
     module Query
       class Simple < Query::Base
 
+        #
+        # @since 0.2.0
         def notebooks
           Entity::Notebooks.new.all
         end
 
+        #
+        # @since 0.2.0
         def tags
           Entity::Tags.new.all
         end
 
+        #
+        # @since 0.2.0
         def notebook_by_name(name)
-          nb = Entity::Notebook.new
-          nb.find(name)
+          entity = Entity::Notebook.new
+          nb = entity.find(name)
+          nb.entity
         end
 
+        #
+        # @since 0.2.0
         def notes_by_notebook(name)
-          nb = Entity::Notebook.new
-          nb.find(name)
+          entity = Entity::Notebook.new
+          nb = entity.find(name)
           nb.notes
         end
 
+        #
+        # @since 0.2.0
         def create_stack_from(full_path)
           stack = Entity::Stack.new
           stack.create_from_yml(full_path)
         end
 
+        #
+        # @since 0.2.0
         def create_note_from(full_path)
-          note = Entity::Note.new
-          note.create_from_yml(full_path)
+          entity = Entity::Note.new
+          note = entity.create_from_yml(full_path)
+          note.entity
         end
 
+        #
+        # @since 0.2.0
         def create_notebooks_from(full_path)
-          nb = Entity::Notebooks.new
-          nb.create_from_yml(full_path)
+          entity = Entity::Notebooks.new
+          nb = entity.create_from_yml(full_path)
+          nb.entity
         end
 
+        #
+        # @since 0.2.0
         def create_notebook(name, stack = nil)
-          nb = Entity::Notebook.new
-          nb.create(name, stack)
+          entity = Entity::Notebook.new
+          nb = entity.create(name, stack)
+          nb.entity
         end
 
+        #
+        # @since 0.2.0
         def find_note(title_filter = nil, notebook_filter = nil)
-          note = Entity::Note.new
-          note.find(title_filter, notebook_filter)
+          entity = Entity::Note.new
+          note = entity.find(title_filter, notebook_filter)
+          note.entity
         end
 
+        #
+        # @since 0.2.0
         def note_exists(name)
-          note = Entity::Note.new
-          note.exists? name
+          entity = Entity::Note.new
+          note = entity.find(name)
+          note.exists?
         end
 
+        #
+        # @since 0.2.0
         def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
-          note = Entity::Note.new
-          note.create(title, body, p_notebook_name, file, share_note, created_on)
+          entity = Entity::Note.new
+          note = nm.create(title, body, p_notebook_name, file, share_note, created_on)
+          note.entity
         end
 
+        #
+        # @since 0.2.0
         def destroy_note(name)
-          note = Entity::Note.new
-          note.find(name)
-          note.expunge(name)
+          entity = Entity::Note.new
+          note = entity.find(name)
+          note.expunge!
         end
 
+        #
+        # @since 0.2.0
         def poll
           begin
             sync = Entity::Sync.new

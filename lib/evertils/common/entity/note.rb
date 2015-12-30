@@ -26,7 +26,7 @@ module Evertils
 
         #
         # @since 0.2.0
-        def create(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+        def create(title, body, parent_notebook = nil, file = nil, share_note = false, created_on = nil)
           @entity = nil
 
           # final output
@@ -62,11 +62,11 @@ module Evertils
           # setup note properties
           our_note.title = title
           our_note.content = n_body
-          our_note.created = created_on if !created_on.nil?
+          our_note.created = created_on if !created_on.is_a?(DateTime)
 
-          if !p_notebook_name.is_a? ::Evernote::EDAM::Type::Notebook
+          if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
-            parent_notebook = nb.find(p_notebook_name)
+            parent_notebook = nb.find(parent_notebook)
             parent_notebook = nb.default if parent_notebook.nil?
           end
           
@@ -85,6 +85,8 @@ module Evertils
           rescue ::Evernote::EDAM::Error::EDAMNotFoundException
             ## Parent Notebook GUID doesn't correspond to an actual notebook
             Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
+          rescue ArgumentError => e
+            Notify.error e.backtrace
           end
 
           Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created")
@@ -122,8 +124,10 @@ module Evertils
         #
         # @since 0.2.9
         def move_to(notebook)
-          nb = Evertils::Common::Entity::Notebook.new
+          nb = Evertils::Common::Manager::Notebook.new
           target = nb.find(notebook)
+
+          raise "Notebook not found: #{notebook}" if !target
           
           @entity.notebookGuid = target.prop(:guid)
 
@@ -162,6 +166,19 @@ module Evertils
           self if @entity
         end
         alias_method :find_by_name, :find
+
+        #
+        # @since 0.3.0
+        def tag(name)
+          @entity.tagNames = [name]
+          @evernote.call(:updateNote, @entity)
+        end
+
+        #
+        # @since 0.3.0
+        def entity
+          @entity
+        end
 
       end
     end

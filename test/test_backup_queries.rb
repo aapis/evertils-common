@@ -1,9 +1,10 @@
-require 'minitest/autorun'
-require 'evertils/common'
+require 'evertils/test'
 
-class BackupQueriesTest < Minitest::Test
+class BackupQueriesTest < Evertils::Test::Base
 
   def setup
+    super
+    
     @entity = Evertils::Common::Query::Backup.new
   end
   

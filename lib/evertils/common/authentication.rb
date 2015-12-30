@@ -1,24 +1,27 @@
 module Evertils
   module Common
     class Authentication
+      include Singleton
 
       attr_accessor :store, :shardId, :version
 
       def initialize
         begin
-          if Evertils::Common::EVERNOTE_DEVELOPER_TOKEN.nil?
+          if Evertils.token.nil?
             Notify.error("Evernote developer token is not configured properly!\n$EVERTILS_TOKEN == nil")
           end
 
-          userStoreUrl = "https://#{Evertils::Common::EVERNOTE_HOST}/edam/user"
+          userStoreUrl = "https://#{Evertils.host}/edam/user"
 
           userStoreTransport = Thrift::HTTPClientTransport.new(userStoreUrl)
           userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
           @@user = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
 
-          versionOK = @@user.checkVersion("evernote-data",
-                     ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR,
-                     ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+          if Evertils.is_test?
+            puts "TEST USER: #{info[:user]}"
+          end
+
+          versionOK = @@user.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
 
           @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
           @shardId = user.shardId
@@ -27,7 +30,7 @@ module Evertils
             Notify.error("Evernote API requires an update.  Latest version is #{@version}")
           end
 
-          noteStoreUrl = @@user.getNoteStoreUrl(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+          noteStoreUrl = @@user.getNoteStoreUrl(Evertils.token)
 
           noteStoreTransport = Thrift::HTTPClientTransport.new(noteStoreUrl)
           noteStoreProtocol = Thrift::BinaryProtocol.new(noteStoreTransport)
@@ -53,14 +56,19 @@ module Evertils
       end
 
       def user
-        @@user.getUser(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        @@user.getUser(Evertils.token)
       end
 
       def call(func, *args)
-        if args.size > 0
-          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN, *args)
-        else
-          @store.method(func.to_s).call(Evertils::Common::EVERNOTE_DEVELOPER_TOKEN)
+        begin
+          if args.size > 0
+            @store.method(func.to_s).call(Evertils.token, *args)
+          else
+            @store.method(func.to_s).call(Evertils.token)
+          end
+        rescue Evernote::EDAM::Error::EDAMSystemException => e
+          Notify.warning e.inspect
+          nil
         end
       end
     end
