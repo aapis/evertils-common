@@ -124,8 +124,10 @@ module Evertils
         #
         # @since 0.2.9
         def move_to(notebook)
-          nb = Evertils::Common::Entity::Notebook.new
+          nb = Evertils::Common::Manager::Notebook.new
           target = nb.find(notebook)
+
+          raise "Notebook not found: #{notebook}" if !target
           
           @entity.notebookGuid = target.prop(:guid)
 

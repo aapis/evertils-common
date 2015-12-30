@@ -27,6 +27,8 @@ module Evertils
           else
             note = search_result
           end
+
+          note
         end
 
       end
