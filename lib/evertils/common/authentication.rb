@@ -45,9 +45,9 @@ module Evertils
       def call_user(func, *args)
         begin
           if args.size > 0
-            @userStore.method(func.to_s).call(Evertils.token, *args)
+            @userStore.method(func.to_s).call(*args)
           else
-            @userStore.method(func.to_s).call(Evertils.token)
+            @userStore.method(func.to_s).call
           end
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           Notify.warning e.inspect
@@ -63,7 +63,7 @@ module Evertils
         userStoreTransport = Thrift::HTTPClientTransport.new(userStoreUrl)
         userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
         @userStore = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
-        @user = call_user(:getUser)
+        @user = call_user(:getUser, Evertils.token)
 
         if Evertils.is_test?
           Notify.spit "TEST USER: #{info[:user]}"
@@ -71,7 +71,7 @@ module Evertils
       end
 
       def prepare_note_store
-        noteStoreUrl = call_user(:getNoteStoreUrl)
+        noteStoreUrl = call_user(:getNoteStoreUrl, Evertils.token)
 
         noteStoreTransport = Thrift::HTTPClientTransport.new(noteStoreUrl)
         noteStoreProtocol = Thrift::BinaryProtocol.new(noteStoreTransport)
@@ -79,7 +79,8 @@ module Evertils
       end
 
       def requires_update
-        entity = @userStore.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+        #entity = @userStore.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+        entity = call_user(:checkVersion, "evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
 
         @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
 
