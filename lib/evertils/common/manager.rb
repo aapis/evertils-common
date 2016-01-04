@@ -25,8 +25,10 @@ module Evertils
 
         #
         # @since 0.3.0
-        def deprecation_notice(version)
-          puts "Deprecated as of #{version}"
+        def deprecation_notice(version, message)
+          output = "Deprecated as of #{version}"
+          output += "\nReason: #{message}" if message
+          output
         end
 
       end

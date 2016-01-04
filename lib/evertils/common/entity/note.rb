@@ -116,7 +116,7 @@ module Evertils
         #
         # @since 0.2.0
         def expunge
-          deprecation_notice('0.2.9')
+          deprecation_notice('0.2.9', 'Replaced with expunge! to better follow Ruby standards for method names.  Will be removed in 0.3.5')
 
           @evernote.call(:expungeNote, @entity.guid)
         end
