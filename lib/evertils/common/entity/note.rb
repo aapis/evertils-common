@@ -172,12 +172,6 @@ module Evertils
           @evernote.call(:updateNote, @entity)
         end
 
-        #
-        # @since 0.3.0
-        def entity
-          @entity
-        end
-
       end
     end
   end
