@@ -76,8 +76,6 @@ module Evertils
       # Remove all seeded data after all tests have run
       # @since 0.3.0
       def clean
-        full_path = File.join(File.dirname(__FILE__), 'seed/all.yml')
-
         nb = Evertils::Common::Entity::Notebooks.new
         nbm = Evertils::Common::Manager::Notebook.new
         auth = Evertils::Common::Authentication.instance
