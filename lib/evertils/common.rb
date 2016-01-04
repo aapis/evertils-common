@@ -27,6 +27,7 @@ require 'evertils/common/entity/note'
 require 'evertils/common/entity/tag'
 require 'evertils/common/entity/tags'
 require 'evertils/common/entity/sync'
+require 'evertils/common/entity/stack'
 
 require 'evertils/common/converter/yaml_to_enml'
 
