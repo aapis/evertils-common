@@ -14,6 +14,7 @@ module Evertils
           response = @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
           response.notes
         end
+        alias_method :find, :find_all
 
         def find_one(title, notebook = nil)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
