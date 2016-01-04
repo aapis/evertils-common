@@ -67,7 +67,7 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.notebookGuid = @entity.guid
 
-          notes = Notes.new(@evernote)
+          notes = Notes.new
           notes.find(nil, @entity.guid)
         end
 
