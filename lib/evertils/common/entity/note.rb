@@ -127,7 +127,7 @@ module Evertils
           nb = Evertils::Common::Manager::Notebook.new
           target = nb.find(notebook)
 
-          raise "Notebook not found: #{notebook}" if !target
+          raise "Notebook not found: #{notebook}" if target.entity.nil?
           
           @entity.notebookGuid = target.prop(:guid)
 
