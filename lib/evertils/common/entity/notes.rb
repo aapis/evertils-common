@@ -51,15 +51,14 @@ module Evertils
           spec.includeCreated = true
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
-          notes_by_date = []
 
-          pool.notes.each do |note|
-            note_datetime = note_date(note, period)
+          notes_by_date = pool.notes.select do |note|
+            f = finish.to_time.to_i
+            s = start.to_time.to_i
+            n = note_date(note, period).to_time.to_i
 
-            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') < finish.strftime('%m-%d-%Y') && note_datetime.strftime('%m-%d-%Y') > start.strftime('%m-%d-%Y')
+            n <= f && n >= s
           end
-
-          notes_by_date
         end
 
         #
@@ -75,15 +74,13 @@ module Evertils
           spec.includeCreated = true
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
-          notes_by_date = []
           
-          pool.notes.each do |note|
-            note_datetime = note_date(note, period)
+          notes_by_date = pool.notes.select do |note|
+            d = date.to_time.to_i
+            n = note_date(note, period).to_time.to_i
 
-            notes_by_date << note if note_datetime.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
+            n == d
           end
-
-          notes_by_date
         end
 
         private
