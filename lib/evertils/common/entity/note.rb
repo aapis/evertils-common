@@ -152,16 +152,14 @@ module Evertils
           @entity = nil
 
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = name
+          filter.words = "intitle:#{name}"
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
-          if result.totalNotes > 0
-            @entity = result.notes[0]
-          end
+          @entity = result.notes.detect { |note| note.title == name }
 
           self if @entity
         end
