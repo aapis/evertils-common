@@ -29,6 +29,8 @@ module Evertils
             end
           rescue ArgumentError => e
             puts e.message
+          rescue Evernote::EDAM::Error::EDAMUserException => e
+            puts e.message
           end
         end
 

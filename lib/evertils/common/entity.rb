@@ -3,7 +3,7 @@ module Evertils
     module Entity
       class Base
 
-        attr_accessor :evernote
+        attr_accessor :evernote, :entity
 
         def initialize
           @evernote = Authentication.instance
@@ -19,8 +19,10 @@ module Evertils
 
         #
         # @since 0.2.8
-        def deprecation_notice(version)
-          puts "Deprecated as of #{version}"
+        def deprecation_notice(version, message)
+          output = "Deprecated as of #{version}"
+          output += "\nReason: #{message}" if message
+          output
         end
 
         #

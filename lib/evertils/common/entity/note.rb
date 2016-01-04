@@ -116,7 +116,7 @@ module Evertils
         #
         # @since 0.2.0
         def expunge
-          deprecation_notice('0.2.9')
+          deprecation_notice('0.2.9', 'Replaced with expunge! to better follow Ruby standards for method names.  Will be removed in 0.3.5')
 
           @evernote.call(:expungeNote, @entity.guid)
         end
@@ -127,7 +127,7 @@ module Evertils
           nb = Evertils::Common::Manager::Notebook.new
           target = nb.find(notebook)
 
-          raise "Notebook not found: #{notebook}" if !target
+          raise "Notebook not found: #{notebook}" if target.entity.nil?
           
           @entity.notebookGuid = target.prop(:guid)
 
@@ -152,16 +152,14 @@ module Evertils
           @entity = nil
 
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = name
+          filter.words = "intitle:#{name}"
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
 
-          if result.totalNotes > 0
-            @entity = result.notes[0]
-          end
+          @entity = result.notes.detect { |note| note.title == name }
 
           self if @entity
         end
@@ -172,12 +170,6 @@ module Evertils
         def tag(name)
           @entity.tagNames = [name]
           @evernote.call(:updateNote, @entity)
-        end
-
-        #
-        # @since 0.3.0
-        def entity
-          @entity
         end
 
       end
