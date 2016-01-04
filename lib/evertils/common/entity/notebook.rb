@@ -71,12 +71,6 @@ module Evertils
           notes.find(nil, @entity.guid)
         end
 
-        #
-        # @since 0.3.0
-        def entity
-          @entity
-        end
-
       end
     end
   end
