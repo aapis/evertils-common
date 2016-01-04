@@ -33,21 +33,21 @@ module Evertils
         #
         # @since 0.2.0
         def create_note_from(full_path)
-          entity = Manager::Note.new
+          entity = Entity::Note.new
           note = entity.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
         def create_notebooks_from(full_path)
-          entity = Manager::Notebooks.new
+          entity = Entity::Notebooks.new
           nb = entity.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
         def create_notebook(name, stack = nil)
-          entity = Manager::Notebook.new
+          entity = Entity::Notebook.new
           nb = entity.create(name, stack)
         end
 
