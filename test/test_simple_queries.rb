@@ -6,6 +6,7 @@ class SimpleQueriesTest < Evertils::Test::Base
     super
 
     @entity = Evertils::Common::Query::Simple.new
+    @seed_data_path = File.join(File.dirname(__FILE__), '../lib/evertils/test/seed/')
   end
   
   def test_notebooks
@@ -34,15 +35,21 @@ class SimpleQueriesTest < Evertils::Test::Base
   end
 
   def test_create_stack_from
-    pass("Not done yet")
+    stack_yml = @seed_data_path + 'stack.yml'
+    
+    assert @entity.create_stack_from(stack_yml), "Unable to create stack from YML"
   end
 
   def test_create_note_from
-    pass("Not done yet")
+    note_yml = @seed_data_path + 'note.yml'
+    
+    assert @entity.create_note_from(note_yml), "Unable to create note from YML"
   end
 
   def test_create_notebooks_from
-    pass("Not done yet")
+    notebooks_yml = @seed_data_path + 'notebooks.yml'
+    
+    assert @entity.create_notebooks_from(notebooks_yml), "Unable to create notebooks from YML"
   end
 
   def test_create_notebook
