@@ -52,7 +52,7 @@ module Evertils
         # @since 0.2.0
         # @deprecated 0.2.9
         def expunge
-          deprecation_notice('0.2.9')
+          deprecation_notice('0.2.9', 'Replaced with Entity#expunge!  Will be removed in 0.4.0.')
 
           @evernote.call(:expungeNotebook, @entity.guid)
         end

@@ -3,6 +3,8 @@ module Evertils
     module Entity
       class Tag < Entity::Base
 
+        #
+        # @since 0.2.0
         def find(name)
           @entity = nil
           tags = Tags.new.all
@@ -12,6 +14,8 @@ module Evertils
           self if @entity
         end
 
+        #
+        # @since 0.2.0
         def create(name)
           tag = ::Evernote::EDAM::Type::Tag.new
           tag.name = name
@@ -21,12 +25,17 @@ module Evertils
           self if @entity
         end
 
+        #
+        # @since 0.2.9
         def expunge!
           @evernote.call(:expungeTag, @entity.guid)
         end
 
+        #
+        # @since 0.2.0
+        # @deprecated 0.2.9
         def expunge(name)
-          deprecation_notice('0.2.9')
+          deprecation_notice('0.2.9', 'Replaced with Entity#expunge!  Will be removed in 0.4.0.')
           tag = find(name)
 
           @evernote.call(:expungeTag, tag.guid)
