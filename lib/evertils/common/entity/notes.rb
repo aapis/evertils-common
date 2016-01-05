@@ -67,10 +67,9 @@ module Evertils
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
           
           notes_by_date = pool.notes.select do |note|
-            d = date.to_time.to_i
-            n = note_date(note, period).to_time.to_i
+            n = note_date(note, period)
 
-            n == d
+            n.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
           end
         end
 
