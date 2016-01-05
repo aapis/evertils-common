@@ -8,11 +8,13 @@ class ConvertersTest < Evertils::Test::Base
     @yml_conv_entity = Evertils::Common::Converter::YamlToEnml.new
   end
 
-  # TODO: Commented out temporarily
+  #
   # @since 0.2.9
-  # def test_yaml_to_enml_from_file
-  #   assert @yml_conv_entity.from_file('/Users/ryanpriebe/test.yml'), 'Could not convert from YAML file'
-  # end
+  def test_yaml_to_enml_from_file
+    path = File.join(File.dirname(__FILE__), '../lib/evertils/test/seed/notebooks.yml')
+
+    assert @yml_conv_entity.from_file(path), 'Could not convert from YAML file'
+  end
 
   #
   # @since 0.2.9
