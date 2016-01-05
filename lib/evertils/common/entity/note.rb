@@ -156,7 +156,7 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
 
-          result = @evernote.call(:findNotesMetadata, filter, 0, 1, spec)
+          result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
           @entity = result.notes.detect { |note| note.title == name }
 
