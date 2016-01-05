@@ -11,11 +11,7 @@ module Evertils
           @entity = nil
           notebooks = Notebooks.new.all
 
-          notebooks.each do |notebook|
-            if notebook.name == name.to_s
-              @entity = notebook
-            end
-          end
+          @entity = notebooks.detect { |nb| nb.name == name }
 
           self if @entity
         end

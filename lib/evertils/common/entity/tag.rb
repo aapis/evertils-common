@@ -7,11 +7,7 @@ module Evertils
           @entity = nil
           tags = Tags.new.all
 
-          tags.each do |tag|
-            if tag.name == name.to_s
-              @entity = tag
-            end
-          end
+          @entity = tags.detect { |tag| tag.name == name }
 
           self if @entity
         end
