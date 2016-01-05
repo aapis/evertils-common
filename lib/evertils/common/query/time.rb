@@ -5,20 +5,11 @@ module Evertils
 
         #
         # @since 0.2.8
-        def notes_created_in_range(start, finish = nil)
+        def notes_in_range(start, finish = nil, period = :created)
           finish = DateTime.now if !finish
           note_manager = Evertils::Common::Entity::Note.new
 
-          note_manager.find_by_date_range(start, finish)
-        end
-
-        #
-        # @since 0.2.8
-        def notes_updated_in_range(start, finish = nil)
-          finish = DateTime.now if !finish
-          note_manager = Evertils::Common::Entity::Note.new
-
-          note_manager.find_by_date_range(start, finish, :updated)
+          note_manager.find_by_date_range(start, finish, period)
         end
 
         #
