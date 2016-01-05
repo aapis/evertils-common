@@ -166,8 +166,9 @@ module Evertils
 
         #
         # @since 0.3.0
-        def tag(name)
-          @entity.tagNames = [name]
+        def tag(*guids)
+          @entity.tagGuids = []
+          @entity.tagGuids.concat(guids)
           @evernote.call(:updateNote, @entity)
         end
 
