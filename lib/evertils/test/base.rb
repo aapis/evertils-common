@@ -78,22 +78,29 @@ module Evertils
       def clean
         nb = Evertils::Common::Entity::Notebooks.new
         nbm = Evertils::Common::Manager::Notebook.new
+        notes = Evertils::Common::Entity::Notes.new
         auth = Evertils::Common::Authentication.instance
         tm = Evertils::Common::Entity::Tags.new
 
-        puts "Deleting all tags..."
         tags = tm.all
+        puts "Deleting #{tags.size} tags..."
         tags.each do |tag|
           auth.call(:expungeTag, tag.guid)
         end
 
-        puts "Deleting all notebooks..."
         notebooks = nb.all
+        puts "Deleting #{notebooks.size - 1} notebooks..." # -1 for default notebook
         default = nbm.find_or_create('Default')
 
         notebooks.each do |nb|
           next if nb.guid == default.prop(:guid)
           auth.call(:expungeNotebook, nb.guid)
+        end
+
+        notes = notes.all
+        puts "Deleting #{notes.size} notes..."
+        notes.each do |note|
+          auth.call(:expungeNote, note.guid)
         end
 
         puts "Sample data deleted"

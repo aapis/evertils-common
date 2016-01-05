@@ -3,14 +3,24 @@ module Evertils
     module Entity
       class Notes < Entity::Base
 
-        def find_all(title, notebook = nil)
+        #
+        # @since 0.3.2
+        def all
+          find_all('testing', nil, 1000)
+        end
+
+        #
+        # @since 0.2.0
+        def find_all(title, notebook = nil, limit = 300)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, 300, find_spec)
+          response = @evernote.call(:findNotesMetadata, filters, nil, limit, find_spec)
           response.notes
         end
         alias_method :find, :find_all
 
+        #
+        # @since 0.2.0
         def find_one(title, notebook = nil)
           filters = find_filters(title, notebook)
 
@@ -18,6 +28,8 @@ module Evertils
           response.notes
         end
 
+        #
+        # @since 0.2.0
         def find_by_tag(tag_name)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "tag:#{tag_name}"
@@ -86,10 +98,14 @@ module Evertils
           diff
         end
 
+        #
+        # @since 0.2.0
         def note_date(note, period)
           DateTime.strptime(note.send(period).to_s[0...-3], '%s')
         end
 
+        #
+        # @since 0.3.2
         def find_filters(title, notebook)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "intitle:#{title}" if title
@@ -97,6 +113,8 @@ module Evertils
           filter
         end
 
+        #
+        # @since 0.3.2
         def find_spec
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
