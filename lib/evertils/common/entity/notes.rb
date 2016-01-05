@@ -25,7 +25,7 @@ module Evertils
           filters = find_filters(title, notebook)
 
           response = @evernote.call(:findNotesMetadata, filters, nil, 10, find_spec)
-          
+
           notes = response.notes.detect { |note| note.title == title }
           notes
         end
@@ -57,7 +57,7 @@ module Evertils
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
 
-          notes_by_date = pool.notes.select do |note|
+          pool.notes.select do |note|
             f = finish.to_time.to_i
             s = start.to_time.to_i
             n = note_date(note, period).to_time.to_i
@@ -80,7 +80,7 @@ module Evertils
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
           
-          notes_by_date = pool.notes.select do |note|
+          pool.notes.select do |note|
             n = note_date(note, period)
 
             n.strftime('%m-%d-%Y') == date.strftime('%m-%d-%Y')
