@@ -4,27 +4,13 @@ module Evertils
       class Notes < Entity::Base
 
         def find_all(title, notebook = nil)
-          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "intitle:#{title}" if title
-          filter.notebookGuid = notebook if notebook
-
-          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          spec.includeTitle = true
-
-          response = @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          response = @evernote.call(:findNotesMetadata, find_filters, nil, 300, find_spec)
           response.notes
         end
         alias_method :find, :find_all
 
         def find_one(title, notebook = nil)
-          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
-          filter.words = "intitle:#{title}" if title
-          filter.notebookGuid = notebook if notebook
-
-          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-          spec.includeTitle = true
-
-          response = @evernote.call(:findNotesMetadata, filter, nil, 1, spec)
+          response = @evernote.call(:findNotesMetadata, find_filters, nil, 1, find_spec)
           response.notes
         end
 
@@ -99,6 +85,19 @@ module Evertils
 
         def note_date(note, period)
           DateTime.strptime(note.send(period).to_s[0...-3], '%s')
+        end
+
+        def find_filters
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = "intitle:#{title}" if title
+          filter.notebookGuid = notebook if notebook
+          filter
+        end
+
+        def find_spec
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec
         end
 
       end
