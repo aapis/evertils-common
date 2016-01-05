@@ -1,28 +1,14 @@
 module Evertils
   module Common
     module Entity
-      class Base
+      class Base < Common::Generic
 
         attr_accessor :evernote, :entity
 
         def initialize
           @evernote = Authentication.instance
-        end
 
-        #
-        # @since 0.2.0
-        def has_required_fields(hash, required)
-          hash.keys.each do |key|
-            required.include? key
-          end
-        end
-
-        #
-        # @since 0.2.8
-        def deprecation_notice(version, message)
-          output = "Deprecated as of #{version}"
-          output += "\nReason: #{message}" if message
-          output
+          super
         end
 
         #

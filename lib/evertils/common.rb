@@ -4,6 +4,7 @@ require 'yaml'
 require 'mime/types'
 require 'date'
 
+require 'evertils/common/generic'
 require 'evertils/common/enml'
 require 'evertils/common/entity'
 require 'evertils/common/query'
