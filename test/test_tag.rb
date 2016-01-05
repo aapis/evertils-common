@@ -17,7 +17,9 @@ class TagTest < Evertils::Test::Base
   end
 
   def test_tag_not_found
-    assert_nil @entity.find('et_invalid_tag_name'), 'Found tag "et_invalid_tag_name" (it should not exist)'
+    tag = @entity.find('et_invalid_tag_name')
+
+    assert_nil tag.entity, 'Found tag "et_invalid_tag_name" (it should not exist)'
   end
 
   def test_tag_create

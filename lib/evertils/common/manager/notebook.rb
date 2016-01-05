@@ -8,6 +8,7 @@ module Evertils
         def create(name, stack = nil)
           entity = Evertils::Common::Entity::Notebook.new
           entity.create(name, stack)
+          entity
         end
 
         #
@@ -15,6 +16,7 @@ module Evertils
         def find(name)
           entity = Evertils::Common::Entity::Notebook.new
           entity.find(name)
+          entity
         end
 
         #

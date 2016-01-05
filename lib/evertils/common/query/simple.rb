@@ -17,16 +17,8 @@ module Evertils
 
         #
         # @since 0.2.0
-        def notebook_by_name(name)
-          entity = Entity::Notebook.new
-          nb = entity.find(name)
-          nb.entity
-        end
-
-        #
-        # @since 0.2.0
         def notes_by_notebook(name)
-          entity = Entity::Notebook.new
+          entity = Manager::Notebook.new
           nb = entity.find(name)
           nb.notes
         end
@@ -43,7 +35,6 @@ module Evertils
         def create_note_from(full_path)
           entity = Entity::Note.new
           note = entity.create_from_yml(full_path)
-          note.entity
         end
 
         #
@@ -51,7 +42,6 @@ module Evertils
         def create_notebooks_from(full_path)
           entity = Entity::Notebooks.new
           nb = entity.create_from_yml(full_path)
-          nb.entity
         end
 
         #
@@ -59,37 +49,59 @@ module Evertils
         def create_notebook(name, stack = nil)
           entity = Entity::Notebook.new
           nb = entity.create(name, stack)
-          nb.entity
+        end
+
+        #
+        # @since 0.3.1
+        def create_tag(name)
+          entity = Manager::Tag.new
+          tag = entity.create(name)
+        end
+
+        #
+        # @since 0.2.0
+        def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+          entity = Manager::Note.new
+          conf = { name: title, body: body, notebook: p_notebook_name, files: file, shared: share_note, created_on: created_on }
+          note = entity.create(conf)
         end
 
         #
         # @since 0.2.0
         def find_note(title_filter = nil, notebook_filter = nil)
-          entity = Entity::Note.new
+          entity = Manager::Note.new
           note = entity.find(title_filter, notebook_filter)
-          note.entity
+        end
+
+        #
+        # @since 0.3.1
+        def find_notebook(name)
+          entity = Manager::Notebook.new
+          nb = entity.find(name)
+        end
+
+        #
+        # @since 0.2.0
+        # @deprecated 0.3.1
+        def notebook_by_name(name)
+          deprecation_notice('0.3.1', 'Replaced by #find_notebook method.  Will be removed in 0.4.0')
+
+          entity = Manager::Notebook.new
+          nb = entity.find(name)
         end
 
         #
         # @since 0.2.0
         def note_exists(name)
-          entity = Entity::Note.new
+          entity = Manager::Note.new
           note = entity.find(name)
           note.exists?
         end
 
         #
         # @since 0.2.0
-        def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
-          entity = Entity::Note.new
-          note = nm.create(title, body, p_notebook_name, file, share_note, created_on)
-          note.entity
-        end
-
-        #
-        # @since 0.2.0
         def destroy_note(name)
-          entity = Entity::Note.new
+          entity = Manager::Note.new
           note = entity.find(name)
           note.expunge!
         end
