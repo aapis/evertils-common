@@ -96,9 +96,8 @@ module Evertils
 
         #
         # @since 0.2.0
-        def exists?(name)
-          return true if !find(name).nil?
-          false
+        def exists?
+          !@entity.nil?
         end
 
         #
