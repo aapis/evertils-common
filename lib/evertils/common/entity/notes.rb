@@ -4,13 +4,17 @@ module Evertils
       class Notes < Entity::Base
 
         def find_all(title, notebook = nil)
-          response = @evernote.call(:findNotesMetadata, find_filters, nil, 300, find_spec)
+          filters = find_filters(title, notebook)
+
+          response = @evernote.call(:findNotesMetadata, filters, nil, 300, find_spec)
           response.notes
         end
         alias_method :find, :find_all
 
         def find_one(title, notebook = nil)
-          response = @evernote.call(:findNotesMetadata, find_filters, nil, 1, find_spec)
+          filters = find_filters(title, notebook)
+
+          response = @evernote.call(:findNotesMetadata, filters, nil, 1, find_spec)
           response.notes
         end
 
@@ -87,7 +91,7 @@ module Evertils
           DateTime.strptime(note.send(period).to_s[0...-3], '%s')
         end
 
-        def find_filters
+        def find_filters(title, notebook)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "intitle:#{title}" if title
           filter.notebookGuid = notebook if notebook
