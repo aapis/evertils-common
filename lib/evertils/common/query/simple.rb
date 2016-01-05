@@ -68,9 +68,9 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find_note(title_filter = nil, notebook_filter = nil)
+        def find_note(name)
           entity = Manager::Note.new
-          note = entity.find(title_filter, notebook_filter)
+          note = entity.find(name)
         end
 
         #
