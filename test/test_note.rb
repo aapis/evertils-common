@@ -12,25 +12,25 @@ class NoteTest < Evertils::Test::Base
   end
 
   def test_note_found
-    flunk("#{note_name} not found") unless @search.entity
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert search.exists?, "Note \"#{@search.prop(:title)}\" not found"
+    assert @search.exists?, "Note \"#{@search.prop(:title)}\" not found"
   end
 
   def test_note_tag
     tag_manager = Evertils::Common::Manager::Tag.new
     tag = tag_manager.create("tag-#{Time.now.to_i}")
 
-    flunk("#{note_name} not found") unless @search.entity
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @search.tag(tag.prop(:guid)), "Note \"#{note_name}\" could not be tagged"
+    assert @search.tag(tag.prop(:guid)), "Note \"#{@search.prop(:title)}\" could not be tagged"
   end
 
   def test_note_unshare
-    flunk("#{note_name} not found") unless @search.entity
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @search.share, "Note \"#{note_name}\" was unable to be shared"
-    assert_nil @search.unshare, "Note \"#{note_name}\" could not be unshared"
+    assert @search.share, "Note \"#{@search.prop(:title)}\" was unable to be shared"
+    assert_nil @search.unshare, "Note \"#{@search.prop(:title)}\" could not be unshared"
   end
 
   def test_note_destroy
@@ -43,9 +43,9 @@ class NoteTest < Evertils::Test::Base
   end
 
   def test_note_move
-    flunk("#{note_name} not found") unless @search.entity
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @search.move_to('Default'), "Note \"#{note_name}\" could not be moved to target"
+    assert @search.move_to('Default'), "Note \"#{@search.prop(:title)}\" could not be moved to target"
   end
 
 end
