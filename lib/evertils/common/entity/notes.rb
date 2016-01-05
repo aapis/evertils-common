@@ -24,8 +24,10 @@ module Evertils
         def find_one(title, notebook = nil)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, 1, find_spec)
-          response.notes
+          response = @evernote.call(:findNotesMetadata, filters, nil, 10, find_spec)
+          
+          notes = response.notes.detect { |note| note.title == title }
+          notes
         end
 
         #
