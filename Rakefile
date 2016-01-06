@@ -18,13 +18,19 @@ task :cleanup do
   end
 end
 
+# shortcut to run both
+task :prepare do
+  Rake::Task['cleanup'].invoke
+  Rake::Task['seed'].invoke
+end
+
 # hack from
 # http://stackoverflow.com/questions/1689504/how-do-i-make-a-rake-task-run-after-all-other-tasks-i-e-a-rake-afterbuild-tas
 current_tasks =  Rake.application.top_level_tasks
 if current_tasks.include?('test')
   current_tasks << :cleanup
   Rake.application.instance_variable_set(:@top_level_tasks, current_tasks)
-  task :test => :seed
+  task :test => :prepare
 end
 
 desc "Run tests"
