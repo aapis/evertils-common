@@ -17,7 +17,7 @@ class TimeQueriesTest < Evertils::Test::Base
   #
   # @since 0.3.2
   def test_notes_created_on
-    pass('Test coming')
+    assert @entity.created_on(DateTime.new(2015, 01, 14)).size > 0, "No notes created on January 14, 2015"
   end
 
   #
@@ -29,13 +29,13 @@ class TimeQueriesTest < Evertils::Test::Base
   #
   # @since 0.3.2
   def test_notebooks_created_in_range
-    pass('Test coming')
+    assert @entity.notebooks_created_in_range(DateTime.new(2015, 01, 01)).size > 0, "Not enough notes in the range Jan 1 2015 - NOW"
   end
 
   #
   # @since 0.3.2
   def test_notebooks_updated_in_range
-    pass('Test coming')
+    skip('Updated queries not supported yet')
   end
 
   #
