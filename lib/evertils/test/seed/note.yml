@@ -1,3 +1,6 @@
-title: ET: Testing (note from YML)
-body: This is the body
-parent: nil
+title:
+    'ET: Testing (note from YML)'
+body:
+    'This is the body'
+parent:
+    nil

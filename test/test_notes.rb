@@ -15,13 +15,13 @@ class NotesTest < Evertils::Test::Base
 
   def test_find_by_tag
     nm = Evertils::Common::Manager::Note.new
-    note = nm.create(name: "ET: Find by tag (et_test_tag_3)", body: "Test body")
-    note.tag('et_test_tag_3')
+    note = nm.find('Oranges testing') #nm.create(name: "ET: Find by tag (et_test_tag_3)", body: "Test body")
+    tag_manager = Evertils::Common::Manager::Tag.new
+    tag = tag_manager.create("tag-#{Time.now.to_i}")
+    note.tag(tag.prop(:guid))
 
-    assert @entities.find_by_tag('et_test_tag_3').is_a?(Array), 'Incorrect dataype for notes.find_by_tag'
-    assert @entities.find_by_tag('et_test_tag_3').size > 0, 'Incorrect number of results for notes.find_by_tag'
-
-    note.expunge!
+    assert @entities.find_by_tag(tag.prop(:name)).is_a?(Array), 'Incorrect dataype for notes.find_by_tag'
+    assert @entities.find_by_tag(tag.prop(:name)).size > 0, 'Incorrect number of results for notes.find_by_tag'
   end
 
   def test_find_created_by_date_range

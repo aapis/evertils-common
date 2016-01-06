@@ -155,6 +155,7 @@ module Evertils
 
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
+          spec.includeTagGuids = true
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
@@ -167,8 +168,10 @@ module Evertils
         #
         # @since 0.3.0
         def tag(*guids)
-          @entity.tagGuids = []
+          existing_tags = @entity.tagGuids
+          @entity.tagGuids = [] unless existing_tags.is_a?(Array)
           @entity.tagGuids.concat(guids)
+
           @evernote.call(:updateNote, @entity)
         end
 
