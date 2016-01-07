@@ -5,8 +5,8 @@ module Evertils
 
         #
         # @since 0.3.2
-        def all
-          find_all('testing', nil, 1000)
+        def all(keyword)
+          find_all(keyword, nil, 1000)
         end
 
         #

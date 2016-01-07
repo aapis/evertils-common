@@ -7,18 +7,25 @@ module Evertils
       # Run before all tests (check the Rakefile for specifics)
       # @since 0.3.0
       def self.before
-        puts "Seeding test data"
         inst = Base.new(nil)
+        
+        Notify.spit "Preparing to execute tests"
         inst.setup
+        inst.clean
+        
+        Notify.spit "Seeding test data"
         inst.seed
       end
 
       # Run after all tests (check the Rakefile for specifics)
       # @since 0.3.0
       def self.after
-        puts "Deleting test data"
         inst = Base.new(nil)
+
+        Notify.spit "Performing teardown tasks"
         inst.setup
+        
+        Notify.spit "Deleting test data"
         inst.clean
       end
 
