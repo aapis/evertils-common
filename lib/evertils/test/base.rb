@@ -90,24 +90,33 @@ module Evertils
         tm = Evertils::Common::Entity::Tags.new
 
         tags = tm.all
-        puts "Deleting #{tags.size} tags..."
-        tags.each do |tag|
-          auth.call(:expungeTag, tag.guid)
+
+        if tags.size > 0
+          puts "Deleting #{tags.size} tags..."
+          tags.each do |tag|
+            auth.call(:expungeTag, tag.guid)
+          end
         end
 
         notebooks = nb.all
-        puts "Deleting #{notebooks.size - 1} notebooks..." # -1 for default notebook
-        default = nbm.find_or_create('Default')
 
-        notebooks.each do |nb|
-          next if nb.guid == default.prop(:guid)
-          auth.call(:expungeNotebook, nb.guid)
+        if notebooks.size  > 0
+          puts "Deleting #{notebooks.size - 1} notebooks..." # -1 for default notebook
+          default = nbm.find_or_create('Default')
+
+          notebooks.each do |nb|
+            next if nb.guid == default.prop(:guid)
+            auth.call(:expungeNotebook, nb.guid)
+          end
         end
 
-        notes = notes.all
-        puts "Deleting #{notes.size} notes..."
-        notes.each do |note|
-          auth.call(:expungeNote, note.guid)
+        notes = notes.all('testing')
+
+        if notes.size > 0
+          puts "Deleting #{notes.size} notes..."
+          notes.each do |note|
+            auth.call(:expungeNote, note.guid)
+          end
         end
 
         puts "Sample data deleted"
