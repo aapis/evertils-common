@@ -16,6 +16,8 @@ module Evertils
 
           # prepare the main data model access point
           prepare_note_store
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           handle_edam_errors(e)
         end
@@ -36,9 +38,10 @@ module Evertils
           else
             @noteStore.method(func.to_s).call(Evertils.token)
           end
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
-          Notify.warning e.inspect
-          nil
+          handle_edam_errors(e)
         end
       end
 
@@ -49,9 +52,10 @@ module Evertils
           else
             @userStore.method(func.to_s).call
           end
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
-          Notify.warning e.inspect
-          nil
+          handle_edam_errors(e)
         end
       end
 
