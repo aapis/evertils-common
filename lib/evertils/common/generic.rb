@@ -1,7 +1,6 @@
 module Evertils
   module Common
     class Generic
-
       #
       # @since 0.3.2
       def initialize
@@ -23,7 +22,6 @@ module Evertils
         output += "\nReason: #{message}" if message
         output
       end
-
     end
   end
 end

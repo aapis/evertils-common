@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Query
       class Simple < Query::Base
-
         #
         # @since 0.2.0
         def notebooks
@@ -118,7 +117,6 @@ module Evertils
             end
           end
         end
-
       end
     end
   end

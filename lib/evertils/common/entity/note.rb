@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Note < Entity::Base
-
         #
         # @since 0.2.0
         def create_from_yml(full_path)
@@ -175,7 +174,6 @@ module Evertils
 
           @evernote.call(:updateNote, @entity)
         end
-
       end
     end
   end

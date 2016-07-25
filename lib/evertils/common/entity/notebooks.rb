@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Notebooks < Entity::Base
-
         def all
           @evernote.call(:listNotebooks)
         end
@@ -14,7 +13,7 @@ module Evertils
             if File.exists? full_path
               conf = YAML::load(File.open(full_path))
               required = %w(notebooks)
-              
+
               if has_required_fields(conf, required)
                 if !conf["notebooks"].nil?
                   conf["notebooks"].each do |name|
@@ -33,7 +32,6 @@ module Evertils
             puts e.message
           end
         end
-
       end
     end
   end

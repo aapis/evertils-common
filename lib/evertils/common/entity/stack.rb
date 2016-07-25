@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Stack < Entity::Base
-
         def create_from_yml(full_path)
           begin
             nb = Notebook.new
@@ -10,7 +9,7 @@ module Evertils
             if File.exist? full_path
               conf = YAML::load(File.open(full_path))
               required = %w(name children)
-              
+
               if has_required_fields(conf, required)
                 if !conf["children"].nil?
                   conf["children"].each do |name|
@@ -27,7 +26,6 @@ module Evertils
             puts e.message
           end
         end
-
       end
     end
   end

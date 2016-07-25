@@ -68,7 +68,10 @@ module Evertils
         userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
         @userStore = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
         @user = call_user(:getUser, Evertils.token)
-        @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
+        @major_ver = ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR
+        @minor_ver = ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR
+
+        @version = "#{@major_ver}.#{@minor_ver}"
 
         if Evertils.is_test?
           Notify.spit "TEST USER: #{info[:user]}"
@@ -84,7 +87,7 @@ module Evertils
       end
 
       def requires_update
-        !call_user(:checkVersion, "evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
+        !call_user(:checkVersion, "evernote-data", @major_ver, @minor_ver)
       end
 
       private
@@ -138,7 +141,6 @@ module Evertils
         Notify.warning(message)
         exit(0)
       end
-
     end
   end
 end

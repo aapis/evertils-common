@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Notes < Entity::Base
-
         #
         # @since 0.3.2
         def all(keyword)
@@ -79,7 +78,7 @@ module Evertils
           spec.includeCreated = true
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
-          
+
           pool.notes.select do |note|
             n = note_date(note, period)
 
@@ -122,7 +121,6 @@ module Evertils
           spec.includeTitle = true
           spec
         end
-
       end
     end
   end
