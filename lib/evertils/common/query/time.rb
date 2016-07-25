@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Query
       class Time < Query::Base
-
         #
         # @since 0.2.8
         def notes_in_range(start, finish = nil, period = :created)
@@ -83,7 +82,6 @@ module Evertils
 
           @evernote.call(:findNotesMetadata, filter, nil, 300)
         end
-
       end
     end
   end

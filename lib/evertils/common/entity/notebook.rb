@@ -4,7 +4,6 @@ module Evertils
   module Common
     module Entity
       class Notebook < Entity::Base
-
         #
         # @since 0.2.0
         def find(name)
@@ -23,12 +22,12 @@ module Evertils
 
           notebook = ::Evernote::EDAM::Type::Notebook.new
           notebook.name = name
-          
+
           if !stack.nil?
             notebook.stack = stack
             notebook.name = "#{stack}/#{name}"
           end
-          
+
           @entity = @evernote.call(:createNotebook, notebook)
 
           self if @entity
@@ -66,7 +65,6 @@ module Evertils
           notes = Notes.new
           notes.find(nil, @entity.guid)
         end
-
       end
     end
   end

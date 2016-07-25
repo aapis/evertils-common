@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Tag < Entity::Base
-
         #
         # @since 0.2.0
         def find(name)
@@ -40,7 +39,6 @@ module Evertils
 
           @evernote.call(:expungeTag, tag.guid)
         end
-
       end
     end
   end

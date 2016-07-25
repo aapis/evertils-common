@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Note < Entity::Base
-
         #
         # @since 0.2.0
         def create_from_yml(full_path)
@@ -58,7 +57,7 @@ module Evertils
           n_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
           n_body += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
           n_body += "<en-note>#{body}</en-note>"
-         
+
           # setup note properties
           our_note.title = title
           our_note.content = n_body
@@ -69,9 +68,9 @@ module Evertils
             parent_notebook = nb.find(parent_notebook)
             parent_notebook = nb.default if parent_notebook.nil?
           end
-          
+
           # parent_notebook is optional; if omitted, default notebook is used
-          our_note.notebookGuid = parent_notebook.prop(:guid)
+          our_note.notebookGuid = parent_notebook.to_s
 
           # Attempt to create note in Evernote account
           begin
@@ -127,8 +126,8 @@ module Evertils
           target = nb.find(notebook)
 
           raise "Notebook not found: #{notebook}" if target.entity.nil?
-          
-          @entity.notebookGuid = target.prop(:guid)
+
+          @entity.notebookGuid = target.to_s
 
           @evernote.call(:updateNote, @entity)
         end
@@ -168,13 +167,13 @@ module Evertils
         #
         # @since 0.3.0
         def tag(*guids)
+          guids = guids.map(&:to_s)
           existing_tags = @entity.tagGuids
           @entity.tagGuids = [] unless existing_tags.is_a?(Array)
           @entity.tagGuids.concat(guids)
 
           @evernote.call(:updateNote, @entity)
         end
-
       end
     end
   end

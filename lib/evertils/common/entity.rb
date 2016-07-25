@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Entity
       class Base < Common::Generic
-
         attr_accessor :evernote, :entity
 
         def initialize
@@ -29,6 +28,11 @@ module Evertils
           @entity.send(name)
         end
 
+        #
+        # @since 0.3.2
+        def to_s
+          prop(:guid)
+        end
       end
     end
   end

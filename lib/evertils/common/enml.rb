@@ -1,7 +1,6 @@
 module Evertils
   module Common
     class ENML
-
       attr_reader :element, :embeddable_element
 
       def initialize(file = nil)
@@ -14,7 +13,7 @@ module Evertils
       end
 
       private
-      
+
       def enml_element
         read_file = File.open(@file, 'rb') { |io| io.read }
 

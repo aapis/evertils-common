@@ -1,7 +1,6 @@
 require 'evertils/test'
 
 class NoteTest < Evertils::Test::Base
-
   def setup
     super
 
@@ -23,7 +22,7 @@ class NoteTest < Evertils::Test::Base
 
     flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @search.tag(tag.prop(:guid)), "Note \"#{@search.prop(:title)}\" could not be tagged"
+    assert @search.tag(tag), "Note \"#{@search.prop(:title)}\" could not be tagged"
   end
 
   def test_note_unshare
@@ -47,5 +46,4 @@ class NoteTest < Evertils::Test::Base
 
     assert @search.move_to('Default'), "Note \"#{@search.prop(:title)}\" could not be moved to target"
   end
-
 end
