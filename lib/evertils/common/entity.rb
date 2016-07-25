@@ -29,6 +29,12 @@ module Evertils
           @entity.send(name)
         end
 
+        #
+        # @since 0.3.2
+        def to_s
+          prop(:guid)
+        end
+
       end
     end
   end

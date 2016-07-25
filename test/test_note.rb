@@ -23,7 +23,7 @@ class NoteTest < Evertils::Test::Base
 
     flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @search.tag(tag.prop(:guid)), "Note \"#{@search.prop(:title)}\" could not be tagged"
+    assert @search.tag(tag), "Note \"#{@search.prop(:title)}\" could not be tagged"
   end
 
   def test_note_unshare

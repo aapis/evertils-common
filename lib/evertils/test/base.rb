@@ -8,11 +8,11 @@ module Evertils
       # @since 0.3.0
       def self.before
         inst = Base.new(nil)
-        
+
         Notify.spit "Preparing to execute tests"
         inst.setup
         inst.clean
-        
+
         Notify.spit "Seeding test data"
         inst.seed
       end
@@ -24,7 +24,7 @@ module Evertils
 
         Notify.spit "Performing teardown tasks"
         inst.setup
-        
+
         Notify.spit "Deleting test data"
         inst.clean
       end
@@ -46,11 +46,11 @@ module Evertils
       # @since 0.3.0
       def seed
         full_path = File.join(File.dirname(__FILE__), 'seed/all.yml')
-        
+
         begin
           if File.exist? full_path
             conf = YAML::load(File.open(full_path))
-            
+
             nb = Evertils::Common::Entity::Notebook.new
             note = Evertils::Common::Entity::Note.new
 
@@ -105,7 +105,7 @@ module Evertils
           default = nbm.find_or_create('Default')
 
           notebooks.each do |nb|
-            next if nb.guid == default.prop(:guid)
+            next if nb.guid == default.to_s
             auth.call(:expungeNotebook, nb.guid)
           end
         end

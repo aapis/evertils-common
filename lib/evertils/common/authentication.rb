@@ -2,7 +2,7 @@ require 'singleton'
 
 module Evertils
   module Common
-    class Authentication
+    class Authentication < Common::Generic
       include Singleton
 
       def initialize
@@ -68,6 +68,7 @@ module Evertils
         userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
         @userStore = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
         @user = call_user(:getUser, Evertils.token)
+        @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
 
         if Evertils.is_test?
           Notify.spit "TEST USER: #{info[:user]}"
@@ -83,12 +84,7 @@ module Evertils
       end
 
       def requires_update
-        #entity = @userStore.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
-        entity = call_user(:checkVersion, "evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
-
-        @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
-
-        !entity
+        !call_user(:checkVersion, "evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
       end
 
       private
