@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'mime-types'
   spec.add_runtime_dependency "evernote-thrift"
-  spec.add_runtime_dependency "notifaction", "~> 0.4.2"
+  spec.add_runtime_dependency "notifaction", "~> 0.4.3"
 end
