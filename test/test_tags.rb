@@ -15,7 +15,7 @@ class TagsTest < Evertils::Test::Base
     test_tag3 = tag.create("_tag_3")
 
     assert @entities.all.is_a?(Array), "Incorrect datatype for tags.all"
-    assert @entities.all.size > 0, "Incorrect number of results for tags.all"
+    refute @entities.all.empty?, "Incorrect number of results for tags.all"
 
     test_tag1.expunge!
     test_tag2.expunge!
