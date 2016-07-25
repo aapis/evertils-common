@@ -91,6 +91,8 @@ module Evertils
         !entity
       end
 
+      private
+
       def handle_edam_errors(e)
         Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
 
@@ -135,7 +137,7 @@ module Evertils
           minutes = (e.rateLimitDuration/60).to_i
           message = "You are rate limited!  Wait #{minutes} minutes"
         end
-        
+
         Notify.warning(message)
         exit(0)
       end
