@@ -91,6 +91,7 @@ module Evertils
 
       def handle_edam_errors(e)
         Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
+        Notify.warning("Type: #{e.class}")
 
         case e.errorCode
         when 1
