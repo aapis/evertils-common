@@ -37,8 +37,7 @@ module Evertils
             @noteStore.method(func.to_s).call(Evertils.token)
           end
         rescue Evernote::EDAM::Error::EDAMSystemException => e
-          Notify.warning e.inspect
-          nil
+          handle_edam_errors(e)
         end
       end
 
@@ -50,8 +49,7 @@ module Evertils
             @userStore.method(func.to_s).call
           end
         rescue Evernote::EDAM::Error::EDAMSystemException => e
-          Notify.warning e.inspect
-          nil
+          handle_edam_errors(e)
         end
       end
 
@@ -86,6 +84,8 @@ module Evertils
 
         !entity
       end
+
+      private
 
       def handle_edam_errors(e)
         Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
@@ -131,7 +131,7 @@ module Evertils
           minutes = (e.rateLimitDuration/60).to_i
           message = "You are rate limited!  Wait #{minutes} minutes"
         end
-        
+
         Notify.warning(message)
         exit(0)
       end
