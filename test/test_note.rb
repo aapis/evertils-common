@@ -1,7 +1,6 @@
 require 'evertils/test'
 
 class NoteTest < Evertils::Test::Base
-
   def setup
     super
 
@@ -47,5 +46,4 @@ class NoteTest < Evertils::Test::Base
 
     assert @search.move_to('Default'), "Note \"#{@search.prop(:title)}\" could not be moved to target"
   end
-
 end
