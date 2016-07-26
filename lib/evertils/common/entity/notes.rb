@@ -86,6 +86,17 @@ module Evertils
           end
         end
 
+        #
+        # @since 0.3.2
+        def find_by_filter(filter)
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeUpdated = true
+          spec.includeCreated = true
+
+          @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+        end
+
         private
 
         #
