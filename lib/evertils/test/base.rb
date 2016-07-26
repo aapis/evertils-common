@@ -3,7 +3,6 @@ require 'minitest/autorun'
 module Evertils
   module Test
     class Base < Minitest::Test
-
       # Run before all tests (check the Rakefile for specifics)
       # @since 0.3.0
       def self.before
@@ -34,12 +33,9 @@ module Evertils
       def setup
         entity = Evertils::Common::Manager::Sync.new
 
-        @@test_time = Time.now.to_i
+        Notify.error('Could not determine connection to the Evernote API, exiting') unless entity.state.is_a?(Evernote::EDAM::NoteStore::SyncState)
 
-        if !entity.state.is_a?(Evernote::EDAM::NoteStore::SyncState)
-          puts 'Could not determine connection to the Evernote API, exiting'
-          exit(1)
-        end
+        @@test_time = Time.now.to_i
       end
 
       #
@@ -119,7 +115,6 @@ module Evertils
 
         puts "Sample data deleted"
       end
-
     end
   end
 end

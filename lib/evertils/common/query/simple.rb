@@ -63,7 +63,7 @@ module Evertils
           entity = Manager::Note.new
           entity.create(conf)
         end
-        alias_method :create_note_from_hash, :create_note
+        alias create_note create_note_from_hash
 
         #
         # @since 0.2.0

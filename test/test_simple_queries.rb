@@ -59,14 +59,6 @@ class SimpleQueriesTest < Evertils::Test::Base
     test_nb.expunge!
   end
 
-  def test_create_note
-    test_note = @entity.create_note("ET: Test Title", "ET_BODY")
-
-    refute_nil test_note, "Note could not be created"
-    assert test_note.find("ET: Test Title"), "Note not found: 'ET: Test Title'"
-    assert test_note.expunge!, "Note could note be expunged"
-  end
-
   def test_create_note_from_hash
     conf = {
       name: "ET: Test Title From Hash",

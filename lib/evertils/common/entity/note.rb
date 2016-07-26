@@ -5,7 +5,7 @@ module Evertils
         #
         # @since 0.2.0
         def create_from_yml(full_path)
-          return unless File.exist? full_path
+          raise "File not found: #{full_path}" unless File.exist? full_path
 
           begin
             conf = YAML::load(File.open(full_path))
@@ -71,22 +71,10 @@ module Evertils
           our_note.notebookGuid = parent_notebook.to_s
 
           # Attempt to create note in Evernote account
-          begin
-            @entity = @evernote.call(:createNote, our_note)
-            share if share_note
-          rescue ::Evernote::EDAM::Error::EDAMUserException => edue
-            ## Something was wrong with the note data
-            ## See EDAMErrorCode enumeration for error code explanation
-            ## http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
-            Notify.error "EDAMUserException: #{edue}\nCode #{edue.errorCode}: #{edue.parameter}"
-          rescue ::Evernote::EDAM::Error::EDAMNotFoundException
-            ## Parent Notebook GUID doesn't correspond to an actual notebook
-            Notify.error "EDAMNotFoundException: Invalid parent notebook GUID"
-          rescue ArgumentError => e
-            Notify.error e.backtrace
-          end
+          @entity = @evernote.call(:createNote, our_note)
+          share if share_note
 
-          Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created")
+          Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created") if @entity
 
           self if @entity
         end
