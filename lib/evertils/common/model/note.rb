@@ -15,7 +15,7 @@ module Evertils
           # data which maps directly to the Type::Note object
           @note.title = conf[:title]
           # @note.content = conf[:body]
-          body = conf[:body]
+          self.body = conf[:body]
           @note.notebookGuid = conf[:parent_notebook] ||= nil
           @note.tagNames = conf[:tags] ||= []
           @note.created = conf[:created_on] ||= nil
