@@ -4,18 +4,13 @@ module Evertils
   module Common
     module Entity
       class Notebook < Entity::Base
-
         #
         # @since 0.2.0
         def find(name)
           @entity = nil
           notebooks = Notebooks.new.all
 
-          notebooks.each do |notebook|
-            if notebook.name == name.to_s
-              @entity = notebook
-            end
-          end
+          @entity = notebooks.detect { |nb| nb.name == name }
 
           self if @entity
         end
@@ -27,12 +22,12 @@ module Evertils
 
           notebook = ::Evernote::EDAM::Type::Notebook.new
           notebook.name = name
-          
+
           if !stack.nil?
             notebook.stack = stack
             notebook.name = "#{stack}/#{name}"
           end
-          
+
           @entity = @evernote.call(:createNotebook, notebook)
 
           self if @entity
@@ -56,7 +51,7 @@ module Evertils
         # @since 0.2.0
         # @deprecated 0.2.9
         def expunge
-          deprecation_notice('0.2.9')
+          deprecation_notice('0.2.9', 'Replaced with Entity#expunge!  Will be removed in 0.4.0.')
 
           @evernote.call(:expungeNotebook, @entity.guid)
         end
@@ -70,7 +65,6 @@ module Evertils
           notes = Notes.new
           notes.find(nil, @entity.guid)
         end
-
       end
     end
   end

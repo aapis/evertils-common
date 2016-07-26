@@ -2,7 +2,7 @@ require 'singleton'
 
 module Evertils
   module Common
-    class Authentication
+    class Authentication < Common::Generic
       include Singleton
 
       def initialize
@@ -16,6 +16,8 @@ module Evertils
 
           # prepare the main data model access point
           prepare_note_store
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           handle_edam_errors(e)
         end
@@ -36,6 +38,8 @@ module Evertils
           else
             @noteStore.method(func.to_s).call(Evertils.token)
           end
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           handle_edam_errors(e)
         end
@@ -48,6 +52,8 @@ module Evertils
           else
             @userStore.method(func.to_s).call
           end
+        rescue Evernote::EDAM::Error::EDAMUserException => e
+          handle_edam_errors(e)
         rescue Evernote::EDAM::Error::EDAMSystemException => e
           handle_edam_errors(e)
         end
@@ -62,6 +68,10 @@ module Evertils
         userStoreProtocol = Thrift::BinaryProtocol.new(userStoreTransport)
         @userStore = ::Evernote::EDAM::UserStore::UserStore::Client.new(userStoreProtocol)
         @user = call_user(:getUser, Evertils.token)
+        @major_ver = ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR
+        @minor_ver = ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR
+
+        @version = "#{@major_ver}.#{@minor_ver}"
 
         if Evertils.is_test?
           Notify.spit "TEST USER: #{info[:user]}"
@@ -77,18 +87,14 @@ module Evertils
       end
 
       def requires_update
-        #entity = @userStore.checkVersion("evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
-        entity = call_user(:checkVersion, "evernote-data", ::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR, ::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR)
-
-        @version = "#{::Evernote::EDAM::UserStore::EDAM_VERSION_MAJOR}.#{::Evernote::EDAM::UserStore::EDAM_VERSION_MINOR}"
-
-        !entity
+        !call_user(:checkVersion, "evernote-data", @major_ver, @minor_ver)
       end
 
       private
 
       def handle_edam_errors(e)
         Notify.warning("Problem authenticating, EDAM code #{e.errorCode}")
+        Notify.warning("Type: #{e.class}")
 
         case e.errorCode
         when 1
@@ -135,7 +141,6 @@ module Evertils
         Notify.warning(message)
         exit(0)
       end
-
     end
   end
 end

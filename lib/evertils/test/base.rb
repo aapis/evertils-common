@@ -7,18 +7,25 @@ module Evertils
       # Run before all tests (check the Rakefile for specifics)
       # @since 0.3.0
       def self.before
-        puts "Seeding test data"
         inst = Base.new(nil)
+
+        Notify.spit "Preparing to execute tests"
         inst.setup
+        inst.clean
+
+        Notify.spit "Seeding test data"
         inst.seed
       end
 
       # Run after all tests (check the Rakefile for specifics)
       # @since 0.3.0
       def self.after
-        puts "Deleting test data"
         inst = Base.new(nil)
+
+        Notify.spit "Performing teardown tasks"
         inst.setup
+
+        Notify.spit "Deleting test data"
         inst.clean
       end
 
@@ -39,35 +46,33 @@ module Evertils
       # @since 0.3.0
       def seed
         full_path = File.join(File.dirname(__FILE__), 'seed/all.yml')
-        
+
+        return unless File.exist? full_path
+
         begin
-          if File.exist? full_path
-            conf = YAML::load(File.open(full_path))
-            
-            nb = Evertils::Common::Entity::Notebook.new
-            note = Evertils::Common::Entity::Note.new
+          conf = YAML::load(File.open(full_path))
 
-            conf.each do |stack_name|
-              stack_name.last.each_pair do |key, arr|
-                puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
-                ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
+          nb = Evertils::Common::Entity::Notebook.new
+          note = Evertils::Common::Entity::Note.new
 
-                arr.each do |child_note|
-                  child_note.each_pair do |name, options|
-                    puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
-                    parsed = DateTime.parse(options['created_on'])
+          conf.each do |stack_name|
+            stack_name.last.each_pair do |key, arr|
+              puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
+              ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
 
-                    created_on = (parsed.to_time.to_i.to_s + "000").to_i
-                    note.create(name, "Body for test note", ch_nb, nil, false, created_on)
-                  end
+              arr.each do |child_note|
+                child_note.each_pair do |name, options|
+                  puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
+                  parsed = DateTime.parse(options['created_on'])
+
+                  created_on = (parsed.to_time.to_i.to_s + "000").to_i
+                  note.create(name, "Body for test note", ch_nb, nil, false, created_on)
                 end
               end
             end
-
-            puts "Sample data seeded"
-          else
-            raise ArgumentError, "File not found: #{full_path}"
           end
+
+          puts "Sample data seeded"
         rescue ArgumentError => e
           puts e.message
         end
@@ -78,22 +83,38 @@ module Evertils
       def clean
         nb = Evertils::Common::Entity::Notebooks.new
         nbm = Evertils::Common::Manager::Notebook.new
+        notes = Evertils::Common::Entity::Notes.new
         auth = Evertils::Common::Authentication.instance
         tm = Evertils::Common::Entity::Tags.new
 
-        puts "Deleting all tags..."
         tags = tm.all
-        tags.each do |tag|
-          auth.call(:expungeTag, tag.guid)
+
+        if tags.size > 0
+          puts "Deleting #{tags.size} tags..."
+          tags.each do |tag|
+            auth.call(:expungeTag, tag.guid)
+          end
         end
 
-        puts "Deleting all notebooks..."
         notebooks = nb.all
-        default = nbm.find_or_create('Default')
 
-        notebooks.each do |nb|
-          next if nb.guid == default.prop(:guid)
-          auth.call(:expungeNotebook, nb.guid)
+        if notebooks.size  > 0
+          puts "Deleting #{notebooks.size - 1} notebooks..." # -1 for default notebook
+          default = nbm.find_or_create('Default')
+
+          notebooks.each do |nb|
+            next if nb.guid == default.to_s
+            auth.call(:expungeNotebook, nb.guid)
+          end
+        end
+
+        notes = notes.all('testing')
+
+        if notes.size > 0
+          puts "Deleting #{notes.size} notes..."
+          notes.each do |note|
+            auth.call(:expungeNote, note.guid)
+          end
         end
 
         puts "Sample data deleted"

@@ -2,14 +2,13 @@ module Evertils
   module Common
     module Query
       class Backup < Query::Base
-
         #
         # @since 0.2.8
         def files(*files)
           date = DateTime.now
           backup_notebook_name = 'Backup'
           nm = Entity::Note.new
-          
+
           # create the backup notebook if it does not exist
           nb_entity = Entity::Notebook.new
           nb = nb_entity.find(backup_notebook_name)
@@ -26,7 +25,6 @@ module Evertils
         def expunge!
           @entity.expunge!
         end
-
       end
     end
   end

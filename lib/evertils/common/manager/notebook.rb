@@ -2,7 +2,6 @@ module Evertils
   module Common
     module Manager
       class Notebook < Manager::Base
-
         #
         # @since 0.3.0
         def create(name, stack = nil)
@@ -32,7 +31,6 @@ module Evertils
 
           note
         end
-
       end
     end
   end

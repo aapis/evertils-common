@@ -1,61 +1,49 @@
 require 'evertils/test'
 
 class NoteTest < Evertils::Test::Base
-
   def setup
     super
 
     @entity = Evertils::Common::Manager::Note.new
+
+    note_name = 'Oranges testing'
+    @search = @entity.find(note_name)
   end
 
-
   def test_note_found
-    note_name = "ET: Second test note, I should not exist"
-    test_note = @entity.create(name: note_name, body: 'Test Body')
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert @entity.find(note_name), "Note \"#{note_name}\" not found"
-
-    test_note.expunge!
+    assert @search.exists?, "Note \"#{@search.prop(:title)}\" not found"
   end
 
   def test_note_tag
-    note_name = "ET: Tagged Note"
-    test_note = @entity.create(name: note_name, body: 'Test Body')
     tag_manager = Evertils::Common::Manager::Tag.new
-    tag = tag_manager.create('et_test_tag')
+    tag = tag_manager.create("tag-#{Time.now.to_i}")
 
-    assert test_note.tag(tag.prop(:name)), "Note \"#{note_name}\" could not be tagged"
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    test_note.expunge!
-    tag.expunge!
+    assert @search.tag(tag), "Note \"#{@search.prop(:title)}\" could not be tagged"
   end
 
   def test_note_unshare
-    note_name = "ET: Shareable Note"
-    test_note = @entity.create(name: note_name, body: 'Test Body')
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert test_note.share, "Note \"#{note_name}\" was unable to be shared"
-    assert_nil test_note.unshare, "Note \"#{note_name}\" could not be unshared"
-
-    test_note.expunge!
+    assert @search.share, "Note \"#{@search.prop(:title)}\" was unable to be shared"
+    assert_nil @search.unshare, "Note \"#{@search.prop(:title)}\" could not be unshared"
   end
 
   def test_note_destroy
-    note_name = "ET: Soft delete this note"
-    test_note = @entity.create(name: note_name, body: 'Test Body')
+    note_name = "ET: testing destroyable"
+    search = @entity.create(name: note_name, body: 'Test Body')
 
-    assert test_note.destroy, "Note \"#{note_name}\" was not trashed"
+    assert search.destroy, "Note \"#{note_name}\" was not trashed"
 
-    test_note.expunge!
+    search.expunge!
   end
 
   def test_note_move
-    note_name = "ET: Move this note"
-    test_note = @entity.create(name: note_name, body: 'Test Body')
+    flunk("#{@search.prop(:title)} not found") unless @search.entity
 
-    assert test_note.move_to('Default'), "Note \"#{note_name}\" could not be moved to target"
-
-    test_note.expunge!
+    assert @search.move_to('Default'), "Note \"#{@search.prop(:title)}\" could not be moved to target"
   end
-
 end
