@@ -64,7 +64,7 @@ module Evertils
           if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
             parent_notebook = nb.find(parent_notebook)
-            parent_notebook = nb.default if parent_notebook.nil?
+            parent_notebook = nb.default if parent_notebook.nil? # #19's issue is here, I believe
           end
 
           # parent_notebook is optional; if omitted, default notebook is used

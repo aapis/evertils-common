@@ -33,50 +33,58 @@ module Evertils
         # @since 0.2.0
         def create_note_from(full_path)
           entity = Entity::Note.new
-          note = entity.create_from_yml(full_path)
+          entity.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
         def create_notebooks_from(full_path)
           entity = Entity::Notebooks.new
-          nb = entity.create_from_yml(full_path)
+          entity.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
         def create_notebook(name, stack = nil)
           entity = Entity::Notebook.new
-          nb = entity.create(name, stack)
+          entity.create(name, stack)
         end
 
         #
         # @since 0.3.1
         def create_tag(name)
           entity = Manager::Tag.new
-          tag = entity.create(name)
+          entity.create(name)
         end
 
         #
         # @since 0.2.0
         def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
           entity = Manager::Note.new
-          conf = { name: title, body: body, notebook: p_notebook_name, files: file, shared: share_note, created_on: created_on }
-          note = entity.create(conf)
+          conf = {
+            name: title,
+            body: body,
+            notebook: p_notebook_name,
+            files: file,
+            shared: share_note,
+            created_on: created_on
+          }
+
+          entity.create(conf)
         end
 
         #
         # @since 0.2.0
         def find_note(name)
           entity = Manager::Note.new
-          note = entity.find(name)
+          entity.find(name)
         end
 
         #
         # @since 0.3.1
         def find_notebook(name)
           entity = Manager::Notebook.new
-          nb = entity.find(name)
+          entity.find(name)
         end
 
         #
@@ -86,7 +94,7 @@ module Evertils
           deprecation_notice('0.3.1', 'Replaced by #find_notebook method.  Will be removed in 0.4.0')
 
           entity = Manager::Notebook.new
-          nb = entity.find(name)
+          entity.find(name)
         end
 
         #
@@ -108,14 +116,8 @@ module Evertils
         #
         # @since 0.2.0
         def poll
-          begin
-            sync = Entity::Sync.new
-            sync.state
-          rescue Evernote::EDAM::Error::EDAMSystemException => e
-            if e.errorCode == 19
-              puts "You're rate limited, wait #{e.rateLimitDuration}s"
-            end
-          end
+          sync = Entity::Sync.new
+          sync.state
         end
       end
     end
