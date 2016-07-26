@@ -15,8 +15,6 @@ module Evertils
         # @since 0.2.8
         def notes_created_on(date = DateTime.now)
           note_manager = Evertils::Common::Entity::Notes.new
-
-          # start should be used for both start and end here
           note_manager.find_by_date(date)
         end
 
@@ -24,8 +22,6 @@ module Evertils
         # @since 0.2.8
         def notes_updated_on(date = DateTime.now)
           note_manager = Evertils::Common::Entity::Notes.new
-
-          # start should be used for both start and end here
           note_manager.find_by_date(date, :updated)
         end
 
@@ -53,7 +49,8 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "created:year-1"
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300)
+          note_manager = Evertils::Common::Entity::Notes.new
+          note_manager.find_by_filter(filter)
         end
 
         #
@@ -62,7 +59,8 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "created:month-1"
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300)
+          note_manager = Evertils::Common::Entity::Notes.new
+          note_manager.find_by_filter(filter)
         end
 
         #
@@ -71,7 +69,8 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "created:week-1"
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300)
+          note_manager = Evertils::Common::Entity::Notes.new
+          note_manager.find_by_filter(filter)
         end
 
         #
@@ -80,7 +79,8 @@ module Evertils
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "created:day-1"
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300)
+          note_manager = Evertils::Common::Entity::Notes.new
+          note_manager.find_by_filter(filter)
         end
       end
     end
