@@ -22,6 +22,22 @@ module Evertils
         output += "\nReason: #{message}" if message
         Notify.spit(output)
       end
+
+      # Required as part of the thrift data conversion
+      # @since 0.3.3
+      def encoding
+        Encoding::UTF_8
+      end
+
+      # Required as part of the thrift data conversion
+      # @since 0.3.3
+      def force_encoding(enc)
+      end
+
+      # Required as part of the thrift data conversion
+      # @since 0.3.3
+      def bytesize(enc)
+      end
     end
   end
 end

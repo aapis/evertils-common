@@ -54,7 +54,7 @@ module Evertils
           conf.each do |stack_name|
             stack_name.last.each_pair do |key, arr|
               puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
-              ch_nb = nb.create(title: "#{key}-#{@@test_time}", body: stack_name.first)
+              ch_nb = nb.create({ title: "#{key}-#{@@test_time}" }, stack_name.first)
 
               arr.each do |child_note|
                 child_note.each_pair do |name, options|

@@ -70,18 +70,6 @@ module Evertils
           @note
         end
 
-        # Required as part of the thrift data conversion
-        # @since 0.3.3
-        def encoding
-          Encoding::UTF_8
-        end
-
-        # Required as part of the thrift data conversion
-        # @since 0.3.3
-        def force_encoding(enc)
-
-        end
-
         protected
 
         # Body content must be valid ENML so we create that here
@@ -96,8 +84,10 @@ module Evertils
         #
         # @since 0.3.3
         def created=(date)
-          date = DateTime.now unless date
-          @note.created = date if date.is_a?(DateTime)
+          # date = DateTime.now unless date
+          # created_on = (date.to_time.to_i.to_s + "000").to_i
+
+          # @note.created = created_on
         end
 
         private

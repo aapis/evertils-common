@@ -25,8 +25,6 @@ module Evertils
         # @since 0.2.0
         def create(conf = {})
           note = Evertils::Common::Model::Note.new(conf)
-          # puts note.notebook.prop(:name).inspect
-          # exit
 
           @entity = @evernote.call(:createNote, note.entity)
 
