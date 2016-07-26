@@ -47,34 +47,32 @@ module Evertils
       def seed
         full_path = File.join(File.dirname(__FILE__), 'seed/all.yml')
 
+        return unless File.exist? full_path
+
         begin
-          if File.exist? full_path
-            conf = YAML::load(File.open(full_path))
+          conf = YAML::load(File.open(full_path))
 
-            nb = Evertils::Common::Entity::Notebook.new
-            note = Evertils::Common::Entity::Note.new
+          nb = Evertils::Common::Entity::Notebook.new
+          note = Evertils::Common::Entity::Note.new
 
-            conf.each do |stack_name|
-              stack_name.last.each_pair do |key, arr|
-                puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
-                ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
+          conf.each do |stack_name|
+            stack_name.last.each_pair do |key, arr|
+              puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
+              ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
 
-                arr.each do |child_note|
-                  child_note.each_pair do |name, options|
-                    puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
-                    parsed = DateTime.parse(options['created_on'])
+              arr.each do |child_note|
+                child_note.each_pair do |name, options|
+                  puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
+                  parsed = DateTime.parse(options['created_on'])
 
-                    created_on = (parsed.to_time.to_i.to_s + "000").to_i
-                    note.create(name, "Body for test note", ch_nb, nil, false, created_on)
-                  end
+                  created_on = (parsed.to_time.to_i.to_s + "000").to_i
+                  note.create(name, "Body for test note", ch_nb, nil, false, created_on)
                 end
               end
             end
-
-            puts "Sample data seeded"
-          else
-            raise ArgumentError, "File not found: #{full_path}"
           end
+
+          puts "Sample data seeded"
         rescue ArgumentError => e
           puts e.message
         end

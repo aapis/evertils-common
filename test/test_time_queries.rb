@@ -16,7 +16,7 @@ class TimeQueriesTest < Evertils::Test::Base
   #
   # @since 0.3.2
   def test_notes_created_on
-    assert @entity.notes_created_on(DateTime.new(2015, 01, 14)).empty?, "No notes created on January 14, 2015"
+    refute @entity.notes_created_on(DateTime.new(2015, 01, 14)).empty?, "No notes created on January 14, 2015"
   end
 
   #
