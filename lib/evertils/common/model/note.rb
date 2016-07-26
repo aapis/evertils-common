@@ -70,6 +70,18 @@ module Evertils
           @note
         end
 
+        # Required as part of the thrift data conversion
+        # @since 0.3.3
+        def encoding
+          Encoding::UTF_8
+        end
+
+        # Required as part of the thrift data conversion
+        # @since 0.3.3
+        def force_encoding(enc)
+
+        end
+
         protected
 
         # Body content must be valid ENML so we create that here
