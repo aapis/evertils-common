@@ -20,7 +20,7 @@ module Evertils
       def deprecation_notice(version, message)
         output = "Deprecated as of #{version}"
         output += "\nReason: #{message}" if message
-        output
+        Notify.spit(output)
       end
     end
   end

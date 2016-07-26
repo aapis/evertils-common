@@ -6,7 +6,14 @@ module Evertils
         # @since 0.3.0
         def create(config)
           entity = Evertils::Common::Entity::Note.new
-          entity.create(config[:name], config[:body], config[:notebook], config[:files], config[:shared], config[:created_on])
+          entity.create(
+            config[:name],
+            config[:body],
+            config[:notebook],
+            config[:files],
+            config[:shared],
+            config[:created_on]
+          )
           entity
         end
 

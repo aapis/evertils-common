@@ -24,21 +24,21 @@ module Evertils
 
         #
         # @since 0.2.0
-        def create_stack_from(full_path)
+        def create_stack_from_yml(full_path)
           stack = Entity::Stack.new
           stack.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
-        def create_note_from(full_path)
+        def create_note_from_yml(full_path)
           entity = Entity::Note.new
           entity.create_from_yml(full_path)
         end
 
         #
         # @since 0.2.0
-        def create_notebooks_from(full_path)
+        def create_notebooks_from_yml(full_path)
           entity = Entity::Notebooks.new
           entity.create_from_yml(full_path)
         end
@@ -58,20 +58,12 @@ module Evertils
         end
 
         #
-        # @since 0.2.0
-        def create_note(title, body, p_notebook_name = nil, file = nil, share_note = false, created_on = nil)
+        # @since 0.3.3
+        def create_note_from_hash(conf)
           entity = Manager::Note.new
-          conf = {
-            name: title,
-            body: body,
-            notebook: p_notebook_name,
-            files: file,
-            shared: share_note,
-            created_on: created_on
-          }
-
           entity.create(conf)
         end
+        alias_method :create_note_from_hash, :create_note
 
         #
         # @since 0.2.0
