@@ -1,8 +1,11 @@
+require 'evertils/common/enmlelement'
+require 'evertils/common/enml'
+
 module Evertils
   module Common
     module Model
       class Note
-        attr_accessor :resources, :shareable, :updated
+        attr_accessor :shareable, :updated
 
         #
         # @since 0.3.3
@@ -13,32 +16,21 @@ module Evertils
           @note = ::Evernote::EDAM::Type::Note.new
 
           # data which maps directly to the Type::Note object
-          @note.title = conf[:title]
-          # @note.content = conf[:body]
           self.body = conf[:body]
+          self.created = conf[:created_on]
+
+          @note.title = conf[:title]
           @note.notebookGuid = conf[:parent_notebook] ||= nil
           @note.tagNames = conf[:tags] ||= []
-          @note.created = conf[:created_on] ||= nil
           @note.resources = []
 
           # data that must be processed first
           @resources = conf[:file] ||= []
           @shareable = conf[:share_note] ||= false
           @updated = conf[:updated_on] ||= nil
-        end
 
-        def add_resources
-          if @resources.is_a? Array
-            @resources.each do |f|
-              media_resource = ENML.new(f)
-              content.concat(media_resource.embeddable_element)
-              @note.resources << media_resource.element
-            end
-          else
-            media_resource = ENML.new(@resources)
-            content.concat(media_resource.embeddable_element)
-            @note.resources << media_resource.element
-          end
+          attach_resources
+          # attach_notebook
         end
 
         # Accessor for the title property
@@ -53,16 +45,6 @@ module Evertils
           @note.content
         end
         alias content body
-
-        #
-        # @since 0.3.3
-        def body=(content)
-          puts content
-          note_body = ENMLElement.new
-          note_body.body = content
-
-          @note.content = note_body
-        end
 
         # Accessor for the notebook property
         # @since 0.3.3
@@ -86,6 +68,48 @@ module Evertils
         # @since 0.3.3
         def prepare
           @note
+        end
+
+        protected
+
+        # Body content must be valid ENML so we create that here
+        # @since 0.3.3
+        def body=(content)
+          note_body = ENMLElement.new
+          note_body.body = content
+
+          @note.content = note_body.to_s
+        end
+
+        #
+        # @since 0.3.3
+        def created=(date)
+          date = DateTime.now unless date
+          @note.created = date if date.is_a?(DateTime)
+        end
+
+        private
+
+        def attach_resources
+          if @resources.is_a? Array
+            @resources.each do |f|
+              media_resource = ENML.new(f)
+              content.concat(media_resource.embeddable_element)
+              @note.resources << media_resource.element
+            end
+          else
+            media_resource = ENML.new(@resources)
+            content.concat(media_resource.embeddable_element)
+            @note.resources << media_resource.element
+          end
+        end
+
+        def attach_notebook
+          nb = Entity::Notebook.new
+          @note.notebookGuid = nb.find(@note.notebookGuid.to_s)
+
+          # notebook is an optional arg; if omitted, default notebook is used
+          @note.notebookGuid = nb.default if @note.notebookGuid.nil?
         end
       end
     end

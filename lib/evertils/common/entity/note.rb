@@ -27,57 +27,16 @@ module Evertils
           @entity = nil
 
           note = Evertils::Common::Model::Note.new(conf)
-          note.add_resources
 
-          puts note.inspect
-          exit #temporary
 
-          # Create note object
-          our_note = ::Evernote::EDAM::Type::Note.new
-          our_note.resources = []
-          our_note.tagNames = []
-
-          # a file was requested, lets prepare it for storage
-          if conf[:file].is_a? Array
-            conf[:file].each do |f|
-              media_resource = ENML.new(f)
-              conf[:body].concat(media_resource.embeddable_element)
-              our_note.resources << media_resource.element
-            end
-          else
-            media_resource = ENML.new(file)
-            conf[:body].concat(media_resource.embeddable_element)
-            our_note.resources << media_resource.element
-          end
-
-          # only join when required
-          conf[:body] = conf[:body].join if conf[:body].is_a? Array
-
-          note_body = ENMLElement.new
-          note_body.body = conf[:body]
-
-          # setup note properties
-          our_note.title = conf[:title]
-          our_note.content = note_body
-          our_note.created = conf[:created_on] if conf[:created_on].is_a?(DateTime)
-
-          if !conf[:parent_notebook].is_a? Evertils::Common::Entity::Notebook
-            nb = Entity::Notebook.new
-            conf[:parent_notebook] = nb.find(conf[:parent_notebook].to_s)
-
-            # conf[:parent_notebook] is optional; if omitted, default notebook is used
-            conf[:parent_notebook] = nb.default if conf[:parent_notebook].nil?
-          end
-
-          our_note.notebookGuid = conf[:parent_notebook].to_s
-
-          # Attempt to create note in Evernote account
-          @entity = @evernote.call(:createNote, our_note)
+          #@entity = @evernote.call(:createNote, our_note)
           share if conf[:share_note]
 
           Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created") if @entity
 
-          self if @entity
+          # self if @entity
+
+          puts note.inspect
         end
 
         #

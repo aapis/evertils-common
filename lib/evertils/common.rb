@@ -7,8 +7,6 @@ require 'date'
 # core files
 require 'evertils/common/kernel'
 require 'evertils/common/generic'
-require 'evertils/common/enml'
-require 'evertils/common/enmlelement'
 require 'evertils/common/entity'
 require 'evertils/common/query'
 require 'evertils/common/converter'
