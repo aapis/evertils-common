@@ -34,7 +34,7 @@ class NoteTest < Evertils::Test::Base
 
   def test_note_destroy
     note_name = "ET: testing destroyable"
-    search = @entity.create(name: note_name, body: 'Test Body')
+    search = @entity.create(title: note_name, body: 'Test Body')
 
     assert search.destroy, "Note \"#{note_name}\" was not trashed"
 

@@ -23,11 +23,14 @@ module Evertils
 
         #
         # @since 0.2.0
-        def create(title, body, parent_notebook = nil, file = nil, share_note = false, created_on = nil)
+        def create(conf = {})
           @entity = nil
 
-          # final output
-          output = {}
+          note = Evertils::Common::Model::Note.new(conf)
+          note.add_resources
+
+          puts note.inspect
+          exit #temporary
 
           # Create note object
           our_note = ::Evernote::EDAM::Type::Note.new
@@ -35,44 +38,42 @@ module Evertils
           our_note.tagNames = []
 
           # a file was requested, lets prepare it for storage
-          if file
-            if file.is_a? Array
-              file.each do |f|
-                media_resource = ENML.new(f)
-                body.concat(media_resource.embeddable_element)
-                our_note.resources << media_resource.element
-              end
-            else
-              media_resource = ENML.new(file)
-              body.concat(media_resource.embeddable_element)
+          if conf[:file].is_a? Array
+            conf[:file].each do |f|
+              media_resource = ENML.new(f)
+              conf[:body].concat(media_resource.embeddable_element)
               our_note.resources << media_resource.element
             end
+          else
+            media_resource = ENML.new(file)
+            conf[:body].concat(media_resource.embeddable_element)
+            our_note.resources << media_resource.element
           end
 
           # only join when required
-          body = body.join if body.is_a? Array
+          conf[:body] = conf[:body].join if conf[:body].is_a? Array
 
-          n_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-          n_body += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
-          n_body += "<en-note>#{body}</en-note>"
+          note_body = ENMLElement.new
+          note_body.body = conf[:body]
 
           # setup note properties
-          our_note.title = title
-          our_note.content = n_body
-          our_note.created = created_on if !created_on.is_a?(DateTime)
+          our_note.title = conf[:title]
+          our_note.content = note_body
+          our_note.created = conf[:created_on] if conf[:created_on].is_a?(DateTime)
 
-          if !parent_notebook.is_a? Evertils::Common::Entity::Notebook
+          if !conf[:parent_notebook].is_a? Evertils::Common::Entity::Notebook
             nb = Entity::Notebook.new
-            parent_notebook = nb.find(parent_notebook.to_s)
-            parent_notebook = nb.default if parent_notebook.nil?
+            conf[:parent_notebook] = nb.find(conf[:parent_notebook].to_s)
+
+            # conf[:parent_notebook] is optional; if omitted, default notebook is used
+            conf[:parent_notebook] = nb.default if conf[:parent_notebook].nil?
           end
 
-          # parent_notebook is optional; if omitted, default notebook is used
-          our_note.notebookGuid = parent_notebook.to_s
+          our_note.notebookGuid = conf[:parent_notebook].to_s
 
           # Attempt to create note in Evernote account
           @entity = @evernote.call(:createNote, our_note)
-          share if share_note
+          share if conf[:share_note]
 
           Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created") if @entity
 
@@ -157,6 +158,24 @@ module Evertils
           existing_tags = @entity.tagGuids
           @entity.tagGuids = [] unless existing_tags.is_a?(Array)
           @entity.tagGuids.concat(guids)
+
+          @evernote.call(:updateNote, @entity)
+        end
+
+        #
+        # @since 0.3.3
+        def attach_file(file)
+          if file.is_a? Array
+            file.each do |f|
+              media_resource = ENML.new(f)
+              body.concat(media_resource.embeddable_element)
+              @entity.resources << media_resource.element
+            end
+          else
+            media_resource = ENML.new(file)
+            body.concat(media_resource.embeddable_element)
+            @entity.resources << media_resource.element
+          end
 
           @evernote.call(:updateNote, @entity)
         end
