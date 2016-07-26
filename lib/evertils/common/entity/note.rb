@@ -24,19 +24,18 @@ module Evertils
         #
         # @since 0.2.0
         def create(conf = {})
-          @entity = nil
-
           note = Evertils::Common::Model::Note.new(conf)
+          # puts note.notebook.prop(:name).inspect
+          # exit
 
+          @entity = @evernote.call(:createNote, note.entity)
 
-          #@entity = @evernote.call(:createNote, our_note)
-          share if conf[:share_note]
+          return false unless @entity
 
-          Notify.success("#{parent_notebook.prop(:stack)}/#{parent_notebook.prop(:name)}/#{our_note.title} created") if @entity
+          share if note.shareable
 
-          # self if @entity
-
-          puts note.inspect
+          Notify.success("#{note.notebook.prop(:stack)}/#{note.notebook.prop(:name)}/#{note.entity.title} created")
+          self
         end
 
         #
@@ -68,7 +67,7 @@ module Evertils
         #
         # @since 0.2.9
         def move_to(notebook)
-          nb = Evertils::Common::Manager::Notebook.new
+          nb = Evertils::Common::Manager::Notebook.instance
           target = nb.find(notebook)
 
           raise "Notebook not found: #{notebook}" if target.entity.nil?

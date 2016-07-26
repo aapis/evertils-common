@@ -8,7 +8,7 @@ class TagsTest < Evertils::Test::Base
   end
 
   def test_get_all_tags
-    tag = Evertils::Common::Manager::Tag.new
+    tag = Evertils::Common::Manager::Tag.instance
 
     test_tag1 = tag.create("_tag_1")
     test_tag2 = tag.create("_tag_2")

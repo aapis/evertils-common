@@ -30,7 +30,7 @@ module Evertils
           @updated = conf[:updated_on] ||= nil
 
           attach_resources
-          # attach_notebook
+          attach_notebook
         end
 
         # Accessor for the title property
@@ -66,7 +66,7 @@ module Evertils
 
         # The whole note
         # @since 0.3.3
-        def prepare
+        def entity
           @note
         end
 

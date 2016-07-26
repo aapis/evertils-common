@@ -1,7 +1,11 @@
+require "singleton"
+
 module Evertils
   module Common
     module Manager
       class Notebook < Manager::Base
+        include Singleton
+
         #
         # @since 0.3.0
         def create(name, stack = nil)

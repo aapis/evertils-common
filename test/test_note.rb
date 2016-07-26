@@ -4,7 +4,7 @@ class NoteTest < Evertils::Test::Base
   def setup
     super
 
-    @entity = Evertils::Common::Manager::Note.new
+    @entity = Evertils::Common::Manager::Note.instance
 
     note_name = 'Oranges testing'
     @search = @entity.find(note_name)
@@ -17,7 +17,7 @@ class NoteTest < Evertils::Test::Base
   end
 
   def test_note_tag
-    tag_manager = Evertils::Common::Manager::Tag.new
+    tag_manager = Evertils::Common::Manager::Tag.instance
     tag = tag_manager.create("tag-#{Time.now.to_i}")
 
     flunk("#{@search.prop(:title)} not found") unless @search.entity

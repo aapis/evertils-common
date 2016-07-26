@@ -31,7 +31,7 @@ module Evertils
       #
       # @since 0.3.0
       def setup
-        entity = Evertils::Common::Manager::Sync.new
+        entity = Evertils::Common::Manager::Sync.instance
 
         Notify.error('Could not determine connection to the Evernote API, exiting') unless entity.state.is_a?(Evernote::EDAM::NoteStore::SyncState)
 
@@ -54,7 +54,7 @@ module Evertils
           conf.each do |stack_name|
             stack_name.last.each_pair do |key, arr|
               puts "Creating: #{stack_name.first}/#{key}-#{@@test_time}..."
-              ch_nb = nb.create("#{key}-#{@@test_time}", stack_name.first)
+              ch_nb = nb.create(title: "#{key}-#{@@test_time}", body: stack_name.first)
 
               arr.each do |child_note|
                 child_note.each_pair do |name, options|
@@ -62,7 +62,7 @@ module Evertils
                   parsed = DateTime.parse(options['created_on'])
 
                   created_on = (parsed.to_time.to_i.to_s + "000").to_i
-                  note.create(name, "Body for test note", ch_nb, nil, false, created_on)
+                  note.create(title: name, body: "Body for test note", parent_notebook: ch_nb, created: created_on)
                 end
               end
             end
@@ -78,7 +78,7 @@ module Evertils
       # @since 0.3.0
       def clean
         nb = Evertils::Common::Entity::Notebooks.new
-        nbm = Evertils::Common::Manager::Notebook.new
+        nbm = Evertils::Common::Manager::Notebook.instance
         notes = Evertils::Common::Entity::Notes.new
         auth = Evertils::Common::Authentication.instance
         tm = Evertils::Common::Entity::Tags.new

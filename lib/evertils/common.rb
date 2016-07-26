@@ -28,7 +28,7 @@ require 'evertils/common/manager/notebook'
 require 'evertils/common/manager/sync'
 require 'evertils/common/manager/tag'
 
-# classes to manipulate your EN data
+# do stuff with your EN data
 require 'evertils/common/entity/notebook'
 require 'evertils/common/entity/notebooks'
 require 'evertils/common/entity/notes'
