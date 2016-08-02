@@ -61,7 +61,7 @@ class SimpleQueriesTest < Evertils::Test::Base
 
   def test_create_note_from_hash
     conf = {
-      name: "ET: Test Title From Hash",
+      title: "ET: Test Title From Hash",
       body: "ET_BODY"
     }
     test_note = @entity.create_note_from_hash(conf)

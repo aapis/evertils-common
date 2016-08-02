@@ -17,7 +17,7 @@ module Evertils
         #
         # @since 0.2.0
         def notes_by_notebook(name)
-          entity = Manager::Notebook.new
+          entity = Manager::Notebook.instance
           nb = entity.find(name)
           nb.notes
         end
@@ -53,14 +53,14 @@ module Evertils
         #
         # @since 0.3.1
         def create_tag(name)
-          entity = Manager::Tag.new
+          entity = Manager::Tag.instance
           entity.create(name)
         end
 
         #
         # @since 0.3.3
         def create_note_from_hash(conf)
-          entity = Manager::Note.new
+          entity = Manager::Note.instance
           entity.create(conf)
         end
         alias create_note create_note_from_hash
@@ -68,14 +68,14 @@ module Evertils
         #
         # @since 0.2.0
         def find_note(name)
-          entity = Manager::Note.new
+          entity = Manager::Note.instance
           entity.find(name)
         end
 
         #
         # @since 0.3.1
         def find_notebook(name)
-          entity = Manager::Notebook.new
+          entity = Manager::Notebook.instance
           entity.find(name)
         end
 
@@ -85,14 +85,14 @@ module Evertils
         def notebook_by_name(name)
           deprecation_notice('0.3.1', 'Replaced by #find_notebook method.  Will be removed in 0.4.0')
 
-          entity = Manager::Notebook.new
+          entity = Manager::Notebook.instance
           entity.find(name)
         end
 
         #
         # @since 0.2.0
         def note_exists(name)
-          entity = Manager::Note.new
+          entity = Manager::Note.instance
           note = entity.find(name)
           note.exists?
         end
@@ -100,7 +100,7 @@ module Evertils
         #
         # @since 0.2.0
         def destroy_note(name)
-          entity = Manager::Note.new
+          entity = Manager::Note.instance
           note = entity.find(name)
           note.expunge!
         end

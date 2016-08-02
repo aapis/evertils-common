@@ -17,22 +17,20 @@ module Evertils
 
           # data which maps directly to the Type::Note object
           self.body = conf[:body]
-          self.created = conf[:created_on] ||= DateTime.now
+          self.created = conf[:created_on] || DateTime.now
 
           @note.title = conf[:title]
-          @note.tagNames = conf[:tags] ||= []
+          @note.tagNames = conf[:tags] || []
           @note.resources = []
 
           # data that must be processed first
-          @notebook = conf[:parent_notebook] ||= nil
-          @resources = conf[:file] ||= []
-          @shareable = conf[:share_note] ||= false
-          @updated = conf[:updated_on] ||= nil
+          @notebook = conf[:parent_notebook] || Entity::Notebook.new.default.to_s
+          @resources = conf[:file] || []
+          @shareable = conf[:share_note] || false
+          @updated = conf[:updated_on] || nil
 
-          # attach_resources
-          # attach_notebook
-
-          # puts self.inspect
+          attach_resources
+          attach_notebook
         end
 
         # Accessor for the title property
@@ -109,11 +107,10 @@ module Evertils
         end
 
         def attach_notebook
-          nb = Entity::Notebook.new
-          @note.notebookGuid = nb.find(@notebook.to_s)
-
-          # notebook is an optional arg; if omitted, default notebook is used
-          @note.notebookGuid = nb.default if @notebook.nil?
+          nb = Manager::Notebook.instance
+          query = nb.find(@notebook.to_s)
+          notebook = query.entity
+          @note.notebookGuid = notebook if query
         end
       end
     end
