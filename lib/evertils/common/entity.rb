@@ -2,7 +2,7 @@ module Evertils
   module Common
     module Entity
       class Base < Common::Generic
-        attr_accessor :evernote, :entity
+        attr_accessor :entity
 
         def initialize
           @evernote = Authentication.instance

@@ -33,22 +33,23 @@ class SimpleQueriesTest < Evertils::Test::Base
     refute notes.empty?, "Incorrect number of results for notes_by_notebook"
   end
 
-  def test_create_stack_from
+  def test_create_stack_from_yml
     stack_yml = @seed_data_path + "stack.yml"
 
-    assert @entity.create_stack_from(stack_yml), "Unable to create stack from YML"
+    assert @entity.create_stack_from_yml(stack_yml), "Unable to create stack from YML"
   end
 
-  def test_create_note_from
+  def test_create_note_from_yml
+    skip("Testing")
     note_yml = @seed_data_path + "note.yml"
 
-    assert @entity.create_note_from(note_yml), "Unable to create note from YML"
+    assert @entity.create_note_from_yml(note_yml), "Unable to create note from YML"
   end
 
   def test_create_notebooks_from
     notebooks_yml = @seed_data_path + "notebooks.yml"
 
-    assert @entity.create_notebooks_from(notebooks_yml), "Unable to create notebooks from YML"
+    assert @entity.create_notebooks_from_yml(notebooks_yml), "Unable to create notebooks from YML"
   end
 
   def test_create_notebook
@@ -59,11 +60,15 @@ class SimpleQueriesTest < Evertils::Test::Base
     test_nb.expunge!
   end
 
-  def test_crud_note
-    test_note = @entity.create_note("ET: Test Title", "ET_BODY")
+  def test_create_note_from_hash
+    conf = {
+      title: "ET: Test Title From Hash",
+      body: "ET_BODY"
+    }
+    test_note = @entity.create_note_from_hash(conf)
 
     refute_nil test_note, "Note could not be created"
-    assert test_note.find("ET: Test Title"), "Note not found: 'ET: Test Title'"
+    assert test_note.find("ET: Test Title From Hash"), "Note not found: 'ET: Test Title From Hash'"
     assert test_note.expunge!, "Note could note be expunged"
   end
 end

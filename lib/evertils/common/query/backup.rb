@@ -17,7 +17,7 @@ module Evertils
             nb = nb_entity.create(backup_notebook_name)
           end
 
-          @entity = nm.create("Backup: #{date}", "", nb, files)
+          @entity = nm.create(title: "Backup: #{date}", body: "", parent_notebook: nb, files: files)
         end
 
         #

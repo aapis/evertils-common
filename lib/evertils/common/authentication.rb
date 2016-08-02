@@ -134,7 +134,7 @@ module Evertils
         when 18
           message = 'Operation denied because access to the corresponding object is prohibited in response to a take-down notice'
         when 19
-          minutes = (e.rateLimitDuration/60).to_i
+          minutes = (e.rateLimitDuration.to_i/60).to_i
           message = "You are rate limited!  Wait #{minutes} minutes"
         end
 

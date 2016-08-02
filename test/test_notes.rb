@@ -13,9 +13,9 @@ class NotesTest < Evertils::Test::Base
   end
 
   def test_find_by_tag
-    nm = Evertils::Common::Manager::Note.new
+    nm = Evertils::Common::Manager::Note.instance
     note = nm.find("Oranges testing") #nm.create(name: "ET: Find by tag (et_test_tag_3)", body: "Test body")
-    tag_manager = Evertils::Common::Manager::Tag.new
+    tag_manager = Evertils::Common::Manager::Tag.instance
     tag = tag_manager.create("tag-#{Time.now.to_i}")
     note.tag(tag)
 
@@ -35,8 +35,8 @@ class NotesTest < Evertils::Test::Base
   end
 
   def test_find_created_by_date
-    nm = Evertils::Common::Manager::Note.new
-    tmp_note = nm.create(name: "ET: Testing find by created date", body: "A body")
+    nm = Evertils::Common::Manager::Note.instance
+    tmp_note = nm.create(title: "ET: Testing find by created date", body: "A body")
 
     assert @entities.find_by_date(DateTime.now).is_a?(Array), "Incorrect dataype for notes.find_by_date_range (created)"
     refute @entities.find_by_date(DateTime.now).empty?, "Incorrect number of results for notes.find_by_date_range (created)"
@@ -46,8 +46,8 @@ class NotesTest < Evertils::Test::Base
 
   def test_find_updated_by_date
     skip("TODO: enable setting of the updated date when creating a note")
-    nm = Evertils::Common::Manager::Note.new
-    tmp_note = nm.create(name: "ET: Testing find by updated date", body: "A body")
+    nm = Evertils::Common::Manager::Note.instance
+    tmp_note = nm.create(title: "ET: Testing find by updated date", body: "A body")
 
     assert @entities.find_by_date(DateTime.now, :updated).is_a?(Array), "Incorrect dataype for notes.find_by_date_range (updated)"
     refute @entities.find_by_date(DateTime.now, :updated).empty?, "Incorrect number of results for notes.find_by_date_range (updated)"

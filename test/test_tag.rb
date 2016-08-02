@@ -4,7 +4,7 @@ class TagTest < Evertils::Test::Base
   def setup
     super
 
-    @entity = Evertils::Common::Manager::Tag.new
+    @entity = Evertils::Common::Manager::Tag.instance
   end
 
   def test_tag_found
