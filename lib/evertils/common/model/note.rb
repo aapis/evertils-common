@@ -17,20 +17,22 @@ module Evertils
 
           # data which maps directly to the Type::Note object
           self.body = conf[:body]
-          self.created = conf[:created_on]
+          self.created = conf[:created_on] ||= DateTime.now
 
           @note.title = conf[:title]
-          @note.notebookGuid = conf[:parent_notebook] ||= nil
           @note.tagNames = conf[:tags] ||= []
           @note.resources = []
 
           # data that must be processed first
+          @notebook = conf[:parent_notebook] ||= nil
           @resources = conf[:file] ||= []
           @shareable = conf[:share_note] ||= false
           @updated = conf[:updated_on] ||= nil
 
-          attach_resources
-          attach_notebook
+          # attach_resources
+          # attach_notebook
+
+          # puts self.inspect
         end
 
         # Accessor for the title property
@@ -84,10 +86,10 @@ module Evertils
         #
         # @since 0.3.3
         def created=(date)
-          # date = DateTime.now unless date
-          # created_on = (date.to_time.to_i.to_s + "000").to_i
+          date = DateTime.now unless date
+          created_on = (date.to_time.to_i.to_s + "000").to_i
 
-          # @note.created = created_on
+          @note.created = created_on
         end
 
         private
@@ -108,10 +110,10 @@ module Evertils
 
         def attach_notebook
           nb = Entity::Notebook.new
-          @note.notebookGuid = nb.find(@note.notebookGuid.to_s)
+          @note.notebookGuid = nb.find(@notebook.to_s)
 
           # notebook is an optional arg; if omitted, default notebook is used
-          @note.notebookGuid = nb.default if @note.notebookGuid.nil?
+          @note.notebookGuid = nb.default if @notebook.nil?
         end
       end
     end

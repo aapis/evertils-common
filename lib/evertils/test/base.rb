@@ -61,8 +61,8 @@ module Evertils
                   puts "Creating: #{stack_name.first}/#{key}/#{name}.note..."
                   parsed = DateTime.parse(options['created_on'])
 
-                  created_on = (parsed.to_time.to_i.to_s + "000").to_i
-                  note.create(title: name, body: "Body for test note", parent_notebook: ch_nb, created: created_on)
+                  # created_on = (parsed.to_time.to_i.to_s + "000").to_i
+                  note.create(title: name, body: "Body for test note", parent_notebook: ch_nb, created: parsed)
                 end
               end
             end

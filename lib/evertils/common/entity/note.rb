@@ -25,14 +25,15 @@ module Evertils
         # @since 0.2.0
         def create(conf = {})
           note = Evertils::Common::Model::Note.new(conf)
-
           @entity = @evernote.call(:createNote, note.entity)
 
           return false unless @entity
 
           share if note.shareable
 
-          Notify.success("#{note.notebook.prop(:stack)}/#{note.notebook.prop(:name)}/#{note.entity.title} created")
+          # TODO: get metadata back so we can print stack/notebook info
+          # Notify.success("#{note.notebook.prop(:stack)}/#{note.notebook.prop(:name)}/#{note.entity.title} created")
+          Notify.success("#{note.entity.title} created")
           self
         end
 
