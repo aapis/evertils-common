@@ -110,7 +110,7 @@ Style/Documentation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/EmptyLines:
+Layout/EmptyLines:
   Exclude:
     - 'Rakefile'
 
@@ -118,7 +118,7 @@ Style/EmptyLines:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: empty_lines, no_empty_lines
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   Exclude:
     - 'lib/evertils/common/converter/yaml_to_enml.rb'
     - 'lib/evertils/test/base.rb'
@@ -127,7 +127,7 @@ Style/EmptyLinesAroundClassBody:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: empty_lines, no_empty_lines
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Exclude:
     - 'lib/evertils/common.rb'
     - 'lib/evertils/test.rb'
@@ -135,7 +135,7 @@ Style/EmptyLinesAroundModuleBody:
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Exclude:
     - 'Rakefile'
     - 'lib/evertils/test/base.rb'
@@ -167,19 +167,19 @@ Style/IfUnlessModifier:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: normal, rails
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   Exclude:
     - 'lib/evertils/common/converter/yaml_to_enml.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/LeadingCommentSpace:
+Layout/LeadingCommentSpace:
   Exclude:
     - 'test/test_notes.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
-Style/MethodCallParentheses:
+Style/MethodCallWithoutArgsParentheses:
   Exclude:
     - 'lib/evertils/common/enml.rb'
 
@@ -230,7 +230,7 @@ Style/PerlBackrefs:
 # NamePrefix: is_, has_, have_
 # NamePrefixBlacklist: is_, has_, have_
 # NameWhitelist: is_a?
-Style/PredicateName:
+Naming/PredicateName:
   Exclude:
     - 'spec/**/*'
     - 'lib/evertils/common.rb'
@@ -256,7 +256,7 @@ Style/RedundantSelf:
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   Exclude:
     - 'Rakefile'
     - 'lib/evertils/common/authentication.rb'
@@ -282,7 +282,7 @@ Style/SymbolProc:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: final_newline, final_blank_line
-Style/TrailingBlankLines:
+Layout/TrailingBlankLines:
   Enabled: false
 
 # Offense count: 1
@@ -295,7 +295,7 @@ Style/TrailingCommaInLiteral:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/TrailingWhitespace:
+Layout/TrailingWhitespace:
   Exclude:
     - 'lib/evertils/common/converter/yaml_to_enml.rb'
 
@@ -308,7 +308,7 @@ Style/UnneededPercentQ:
 # Offense count: 8
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: snake_case, camelCase
-Style/VariableName:
+Naming/VariableName:
   Exclude:
     - 'lib/evertils/common/authentication.rb'
 

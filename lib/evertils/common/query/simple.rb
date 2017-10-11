@@ -73,6 +73,13 @@ module Evertils
         end
 
         #
+        # @since 0.3.4
+        def find_note_contents(name)
+          entity = Manager::Note.instance
+          entity.find_with_contents(name)
+        end
+
+        #
         # @since 0.3.1
         def find_notebook(name)
           entity = Manager::Notebook.instance

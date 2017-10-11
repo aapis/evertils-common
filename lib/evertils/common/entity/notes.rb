@@ -10,20 +10,20 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find_all(title, notebook = nil, limit = 300)
+        def find_all(title, notebook = nil, limit = 300, include_note_body = false)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, limit, find_spec)
+          response = @evernote.call(:findNotesMetadata, filters, 0, limit, find_spec(include_note_body))
           response.notes
         end
         alias_method :find, :find_all
 
         #
         # @since 0.2.0
-        def find_one(title, notebook = nil)
+        def find_one(title, notebook = nil, include_note_body = false)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, 10, find_spec)
+          response = @evernote.call(:findNotesMetadata, filters, 0, 10, find_spec(include_note_body))
 
           notes = response.notes.detect { |note| note.title == title }
           notes
@@ -53,6 +53,7 @@ module Evertils
           spec.includeTitle = true
           spec.includeUpdated = true
           spec.includeCreated = true
+          spec.includeContent = true if include_note_content
 
           pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
 
@@ -94,7 +95,7 @@ module Evertils
           spec.includeUpdated = true
           spec.includeCreated = true
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
         end
 
         private
@@ -127,9 +128,12 @@ module Evertils
 
         #
         # @since 0.3.2
-        def find_spec
+        def find_spec(include_note_body)
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
+          spec.includeContentLength = true
+          spec.includeCreated = true
+          spec.includeUpdated = true
           spec
         end
       end

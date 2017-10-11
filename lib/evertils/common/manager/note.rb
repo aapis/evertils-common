@@ -23,6 +23,14 @@ module Evertils
         end
 
         #
+        # @since 0.3.0
+        def find_with_contents(name)
+          entity = Evertils::Common::Entity::Note.new
+          entity.find_with_contents(name)
+          entity
+        end
+
+        #
         # @since 0.3.1
         def find_or_create(name, stack = nil)
           search_result = find(name)
