@@ -131,6 +131,9 @@ module Evertils
         def find_spec(include_note_body)
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
+          spec.includeContentLength = true
+          spec.includeCreated = true
+          spec.includeUpdated = true
           spec
         end
       end

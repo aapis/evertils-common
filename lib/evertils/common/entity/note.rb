@@ -99,6 +99,9 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
           spec.includeTagGuids = true
+          spec.includeContentLength = true
+          spec.includeCreated = true
+          spec.includeUpdated = true
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
@@ -111,9 +114,11 @@ module Evertils
         #
         # @since 0.2.0
         def find_with_contents(name)
+          raise 'ERROR: Evernote API is incomplete, cannot pull full note content'
+
           find_result = find(name)
 
-          return unless find_result.entity
+          return if find_result.nil?
 
           @entity = find_result.entity
 
