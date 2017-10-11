@@ -16,9 +16,9 @@ module Evertils
 
         #
         # @since 0.3.0
-        def find(name)
+        def find(name, include_note_body = false)
           entity = Evertils::Common::Entity::Note.new
-          entity.find(name)
+          entity.find(name, include_note_body)
           entity
         end
 

@@ -67,9 +67,9 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find_note(name)
+        def find_note(name, include_note_body = false)
           entity = Manager::Note.instance
-          entity.find(name)
+          entity.find(name, include_note_body)
         end
 
         #

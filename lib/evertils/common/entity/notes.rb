@@ -10,20 +10,20 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find_all(title, notebook = nil, limit = 300)
+        def find_all(title, notebook = nil, limit = 300, include_note_body = false)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, limit, find_spec)
+          response = @evernote.call(:findNotesMetadata, filters, include_note_body, limit, find_spec)
           response.notes
         end
         alias_method :find, :find_all
 
         #
         # @since 0.2.0
-        def find_one(title, notebook = nil)
+        def find_one(title, notebook = nil, include_note_body = false)
           filters = find_filters(title, notebook)
 
-          response = @evernote.call(:findNotesMetadata, filters, nil, 10, find_spec)
+          response = @evernote.call(:findNotesMetadata, filters, include_note_body, 10, find_spec)
 
           notes = response.notes.detect { |note| note.title == title }
           notes
@@ -44,7 +44,7 @@ module Evertils
 
         #
         # @since 0.2.9
-        def find_by_date_range(start, finish = DateTime.now, period = :created)
+        def find_by_date_range(start, finish = DateTime.now, period = :created, include_note_body = false)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "#{period}:year-#{year_diff(start.year)}"
           filter.order = 1
@@ -54,7 +54,7 @@ module Evertils
           spec.includeUpdated = true
           spec.includeCreated = true
 
-          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
+          pool = @evernote.call(:findNotesMetadata, filter, include_note_body, 300, spec)
 
           pool.notes.select do |note|
             f = finish.to_time.to_i
@@ -67,7 +67,7 @@ module Evertils
 
         #
         # @since 0.2.9
-        def find_by_date(date, period = :created)
+        def find_by_date(date, period = :created, include_note_body = false)
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
           filter.words = "#{period}:year-#{year_diff(date.year)}"
           filter.order = 1
@@ -77,7 +77,7 @@ module Evertils
           spec.includeUpdated = true
           spec.includeCreated = true
 
-          pool = @evernote.call(:findNotesMetadata, filter, 0, 300, spec)
+          pool = @evernote.call(:findNotesMetadata, filter, include_note_body, 300, spec)
 
           pool.notes.select do |note|
             n = note_date(note, period)
@@ -88,13 +88,13 @@ module Evertils
 
         #
         # @since 0.3.2
-        def find_by_filter(filter)
+        def find_by_filter(filter, include_note_body = false)
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
           spec.includeUpdated = true
           spec.includeCreated = true
 
-          @evernote.call(:findNotesMetadata, filter, nil, 300, spec)
+          @evernote.call(:findNotesMetadata, filter, include_note_body, 300, spec)
         end
 
         private

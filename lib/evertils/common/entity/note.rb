@@ -90,7 +90,7 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find(name)
+        def find(name, include_note_body = false)
           @entity = nil
 
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
@@ -100,7 +100,7 @@ module Evertils
           spec.includeTitle = true
           spec.includeTagGuids = true
 
-          result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
+          result = @evernote.call(:findNotesMetadata, filter, include_note_body, 10, spec)
 
           @entity = result.notes.detect { |note| note.title == name }
 
