@@ -113,7 +113,7 @@ module Evertils
         def find_with_contents(name)
           find_result = find(name)
 
-          raise "Note not found: #{name}" if find_result.entity.nil?
+          return unless find_result.entity
 
           @entity = find_result.entity
 
