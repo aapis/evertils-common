@@ -90,7 +90,7 @@ module Evertils
 
         #
         # @since 0.2.0
-        def find(name, include_note_body = false)
+        def find(name)
           @entity = nil
 
           filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
@@ -99,14 +99,35 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
           spec.includeTagGuids = true
+          spec.includeContent = true if include_note_content
 
-          result = @evernote.call(:findNotesMetadata, filter, include_note_body, 10, spec)
+          result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
           @entity = result.notes.detect { |note| note.title == name }
 
           self if @entity
         end
         alias_method :find_by_name, :find
+
+        #
+        # @since 0.2.0
+        def find_with_contents(name)
+          find_result = find(name)
+
+          raise "Note not found: #{name}" if find_result.entity.nil?
+
+          @entity = find_result.entity
+
+          spec = ::Evernote::EDAM::NoteStore::NoteResultSpec.new
+          spec.includeResourcesData = true
+          spec.includeContent = true
+
+          result = @evernote.call(:getNoteWithResultSpec, @entity.guid, spec)
+
+          @entity = result
+
+          self if @entity
+        end
 
         #
         # @since 0.3.0
