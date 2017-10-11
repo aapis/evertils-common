@@ -99,7 +99,6 @@ module Evertils
           spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
           spec.includeTitle = true
           spec.includeTagGuids = true
-          spec.includeContent = true if include_note_content
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
