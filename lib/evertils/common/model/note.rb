@@ -110,7 +110,7 @@ module Evertils
           nb = Manager::Notebook.instance
           query = nb.find(@notebook.to_s)
           notebook = query.entity
-          @note.notebookGuid = notebook if query
+          @note.notebookGuid = notebook.guid if query
         end
       end
     end
