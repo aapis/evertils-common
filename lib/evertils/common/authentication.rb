@@ -1,4 +1,4 @@
-require 'singleton'
+require "singleton"
 
 module Evertils
   module Common
@@ -137,6 +137,9 @@ module Evertils
           minutes = (e.rateLimitDuration.to_i/60).to_i
           message = "You are rate limited!  Wait #{minutes} minutes"
         end
+
+        message += "\n- "
+        message += e.parameter unless e.parameter.nil?
 
         Notify.warning(message)
         exit(0)

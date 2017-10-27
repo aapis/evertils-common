@@ -56,14 +56,6 @@ module Evertils
         end
 
         #
-        # @since 0.2.0
-        def expunge
-          deprecation_notice('0.2.9', 'Replaced with expunge! to better follow Ruby standards for method names.  Will be removed in 0.3.5')
-
-          @evernote.call(:expungeNote, @entity.guid)
-        end
-
-        #
         # @since 0.2.9
         def move_to(notebook)
           nb = Evertils::Common::Manager::Notebook.instance
@@ -112,22 +104,16 @@ module Evertils
         alias_method :find_by_name, :find
 
         #
+        # https://stackoverflow.com/questions/46694930/evernoteedamnotestorenoteresultspec-is-not-defined
+        # http://www.rubydoc.info/gems/evernote-thrift/Evernote%2FEDAM%2FNoteStore%2FNoteStore%2FClient%3AgetNote
         # @since 0.2.0
         def find_with_contents(name)
-          raise 'ERROR: Evernote API is incomplete, cannot pull full note content'
-
           find_result = find(name)
 
           return if find_result.nil?
 
-          @entity = find_result.entity
-
-          spec = ::Evernote::EDAM::NoteStore::NoteResultSpec.new
-          spec.includeResourcesData = true
-          spec.includeContent = true
-
-          result = @evernote.call(:getNoteWithResultSpec, @entity.guid, spec)
-
+          guid = find_result.entity.guid
+          result = @evernote.call(:getNote, guid, true, false, false, false)
           @entity = result
 
           self if @entity
