@@ -84,7 +84,7 @@ module Evertils
         #
         # @since 0.3.3
         def created=(date)
-          date ||= DateTime.now
+          date ||= Date.now
           created_on = (date.to_time.to_i.to_s + "000").to_i
 
           @note.created = created_on
