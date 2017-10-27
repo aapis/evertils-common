@@ -138,6 +138,9 @@ module Evertils
           message = "You are rate limited!  Wait #{minutes} minutes"
         end
 
+        message += "\n- "
+        message += e.parameter unless e.parameter.nil?
+
         Notify.warning(message)
         exit(0)
       end
