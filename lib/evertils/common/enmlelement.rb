@@ -3,7 +3,8 @@ module Evertils
     class ENMLElement
       #
       # @since 0.3.3
-      def initialize
+      def initialize(colour)
+        @colour = colour
         @enml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
         @enml += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
       end
@@ -11,7 +12,7 @@ module Evertils
       #
       # @since 0.3.3
       def body=(content)
-        @enml += "<en-note>#{content}</en-note>"
+        @enml += "<en-note bgcolor=\"##{@colour.to_s(16)}\">#{content}</en-note>"
       end
 
       #
