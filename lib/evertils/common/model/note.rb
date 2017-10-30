@@ -5,7 +5,7 @@ module Evertils
   module Common
     module Model
       class Note
-        attr_accessor :shareable, :updated
+        attr_accessor :shareable, :updated, :colour
 
         #
         # @since 0.3.3
@@ -16,6 +16,7 @@ module Evertils
           @note = ::Evernote::EDAM::Type::Note.new
 
           # data which maps directly to the Type::Note object
+          self.colour = conf[:colour] || 0xffffff
           self.body = conf[:body]
           self.created = conf[:created_on] || DateTime.now
 
@@ -75,7 +76,7 @@ module Evertils
         # Body content must be valid ENML so we create that here
         # @since 0.3.3
         def body=(content)
-          note_body = ENMLElement.new
+          note_body = ENMLElement.new(colour)
           note_body.body = content
 
           @note.content = note_body.to_s
@@ -85,7 +86,7 @@ module Evertils
         # @since 0.3.3
         def created=(date)
           date ||= Date.now
-          created_on = (date.to_time.to_i.to_s + "000").to_i
+          created_on = (date.to_time.to_i * 1000).to_i
 
           @note.created = created_on
         end
