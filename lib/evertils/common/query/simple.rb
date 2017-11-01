@@ -118,6 +118,13 @@ module Evertils
           sync = Entity::Sync.new
           sync.state
         end
+
+        #
+        # @since 0.3.7
+        def user_info
+          auth = Authentication.instance
+          auth.info
+        end
       end
     end
   end
