@@ -25,9 +25,13 @@ module Evertils
 
       def info
         {
-          :user => "#{@user.name} (#{@user.username}) - ID##{@user.id}",
-          :shard => @user.shardId,
-          :api_version => @version,
+          user: {
+            name: @user.name,
+            username: @user.username,
+            id: @user.id
+          },
+          shard: @user.shardId,
+          api_version: @version,
         }
       end
 
