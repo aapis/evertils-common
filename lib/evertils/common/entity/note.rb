@@ -81,6 +81,12 @@ module Evertils
         end
 
         #
+        # @since 0.3.8
+        def update
+          @evernote.call(:updateNote, @entity)
+        end
+
+        #
         # @since 0.2.0
         def find(name)
           @entity = nil
