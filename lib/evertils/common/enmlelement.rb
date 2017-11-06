@@ -12,7 +12,11 @@ module Evertils
       #
       # @since 0.3.3
       def body=(content)
-        @enml += "<en-note bgcolor=\"##{@colour.to_s(16)}\">#{content}</en-note>"
+        # at some point between 10/30/2017 and 11/06/2017, adding bgcolor to
+        # the root element started throwing EDAM code 11
+        # (Content is not allowed in prolog).  Commenting out for now.
+        # @enml += "<en-note bgcolor=\"##{@colour.to_s(16)}\">#{content}</en-note>"
+        @enml += "<en-note>#{content}</en-note>"
       end
 
       #
