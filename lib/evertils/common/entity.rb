@@ -12,7 +12,9 @@ module Evertils
           '%DOW%': Date.today.wday,
           '%DOW_NAME%': Date.today.strftime('%a'),
           '%YEAR%': Date.today.year,
-          '%WEEK%': Date.today.cweek
+          '%WEEK%': Date.today.cweek,
+          '%WEEK_START%': Date.commercial(Date.today.year, Date.today.cweek, 1),
+          '%WEEK_END%': Date.commercial(Date.today.year, Date.today.cweek, 5)
         }
 
         def initialize
