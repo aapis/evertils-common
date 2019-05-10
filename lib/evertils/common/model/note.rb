@@ -11,21 +11,26 @@ module Evertils
         # @since 0.3.3
         def initialize(conf = {})
           raise "Title (title) is a required field" unless conf[:title]
-          raise "Body (body) is a required field" unless conf[:body]
+          raise "Body (body) is a required field" unless conf[:sections][:body]
 
           @note = ::Evernote::EDAM::Type::Note.new
 
           # data which maps directly to the Type::Note object
           self.colour = conf[:colour] || 0xffffff
-          self.body = conf[:body]
           self.created = conf[:created_on] || DateTime.now
+
+          note_content = ''
+          note_content += conf[:sections][:header] unless conf[:sections][:header] == 'nil'
+          conf[:sections][:body]&.map { |el| note_content += "<h2>#{el}</h2>" }
+          note_content += conf[:sections][:footer] unless conf[:sections][:footer] == 'nil'
+          self.body = note_content
 
           @note.title = conf[:title]
           @note.tagNames = conf[:tags] || []
           @note.resources = []
 
           # data that must be processed first
-          @notebook = conf[:parent_notebook] || Entity::Notebook.new.default.to_s
+          @notebook = conf[:notebook] || Entity::Notebook.new.default.to_s
           @resources = conf[:file] || []
           @shareable = conf[:share_note] || false
           @updated = conf[:updated_on] || nil

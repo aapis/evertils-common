@@ -8,16 +8,14 @@ module Evertils
           raise "File not found: #{full_path}" unless File.exist? full_path
 
           begin
-            conf = YAML::load(File.open(full_path))
-            required = %w(title body)
+            conf = placeholders_for(YAML.safe_load(File.read(full_path)))
+            required = %w[title sections]
 
-            if has_required_fields(conf, required)
-              create(conf['title'], conf['body'], conf['parent'])
-            else
-              raise ArgumentError, 'Configuration file is missing some required fields'
-            end
+            return create(conf) if has_required_fields(conf, required) && !exists?
+
+            raise ArgumentError, 'Configuration file is missing some required fields'
           rescue ArgumentError => e
-            puts e.message
+            Notify.error e.message
           end
         end
 
