@@ -9,7 +9,7 @@ module Evertils
 
           begin
             conf = placeholders_for(YAML.safe_load(File.read(full_path)))
-            required = %w[title sections]
+            required = %w[title]
 
             return create(conf) if has_required_fields(conf, required) && !exists?
 
