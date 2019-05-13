@@ -6,12 +6,13 @@ module Evertils
     module Model
       class Note
         attr_accessor :shareable, :updated, :colour
+        attr_reader :conf
 
         #
         # @since 0.3.3
         def initialize(conf = {})
+          @conf = conf
           raise "Title (title) is a required field" unless conf[:title]
-          raise "Body (body) is a required field" unless conf[:sections][:body]
 
           @note = ::Evernote::EDAM::Type::Note.new
 
@@ -20,10 +21,10 @@ module Evertils
           self.created = conf[:created_on] || DateTime.now
 
           note_content = ''
-          note_content += conf[:sections][:header] unless conf[:sections][:header] == 'nil'
-          conf[:sections][:body]&.map { |el| note_content += "<h2>#{el}</h2>" }
-          note_content += conf[:sections][:footer] unless conf[:sections][:footer] == 'nil'
-          self.body = note_content
+          note_content += conf[:sections][:header] if valid_header?
+          conf[:sections][:body]&.map { |el| note_content += "<h2>#{el}</h2>" } if valid_body?
+          note_content += conf[:sections][:footer] if valid_footer?
+          self.body = conf[:content] || note_content
 
           @note.title = conf[:title]
           @note.tagNames = conf[:tags] || []
@@ -117,6 +118,25 @@ module Evertils
           query = nb.find(@notebook.to_s)
           notebook = query.entity
           @note.notebookGuid = notebook.guid if query
+        end
+
+        def valid_header?
+          sections = conf.key?(:sections)
+          header = sections && conf[:sections].key?(:header)
+
+          header && conf[:sections][:header] == 'nil'
+        end
+
+        def valid_body?
+          sections = conf.key?(:sections)
+          sections && conf[:sections].key?(:header)
+        end
+
+        def valid_footer?
+          sections = conf.key?(:sections)
+          footer = sections && conf[:sections].key?(:footer)
+
+          footer && conf[:sections][:footer] == 'nil'
         end
       end
     end
