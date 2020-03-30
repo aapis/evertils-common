@@ -149,7 +149,7 @@ module Evertils
 
         #
         # @since 0.3.17
-        def find_note_with_contents_using_grammar(grammar)
+        def find_note_contents_using_grammar(grammar)
           find_result = find_with(grammar)
 
           return if find_result.nil?

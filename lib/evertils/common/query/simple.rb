@@ -87,6 +87,13 @@ module Evertils
         end
 
         #
+        # @since 0.3.4
+        def find_note_contents_using_grammar(grammar)
+          entity = Manager::Note.instance
+          entity.find_note_contents_using_grammar(grammar)
+        end
+
+        #
         # @since 0.3.1
         def find_notebook(name)
           entity = Manager::Notebook.instance

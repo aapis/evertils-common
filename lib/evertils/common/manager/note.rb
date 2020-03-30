@@ -39,6 +39,14 @@ module Evertils
         end
 
         #
+        # @since 0.3.18
+        def find_note_contents_using_grammar(grammar)
+          entity = Evertils::Common::Entity::Note.new
+          entity.find_note_contents_using_grammar(grammar)
+          entity
+        end
+
+        #
         # @since 0.3.1
         def find_or_create(name, stack = nil)
           search_result = find(name)
