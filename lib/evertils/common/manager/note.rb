@@ -23,6 +23,14 @@ module Evertils
         end
 
         #
+        # @since 0.3.13
+        def find_with(conf)
+          entity = Evertils::Common::Entity::Note.new
+          entity.find_with(conf)
+          entity
+        end
+
+        #
         # @since 0.3.0
         def find_with_contents(name)
           entity = Evertils::Common::Entity::Note.new

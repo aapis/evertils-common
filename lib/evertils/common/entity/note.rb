@@ -108,6 +108,30 @@ module Evertils
         alias_method :find_by_name, :find
 
         #
+        # @since 0.3.13
+        def find_with(conf)
+          return unless conf.is_a?(Hash)
+
+          @entity = nil
+
+          filter = ::Evernote::EDAM::NoteStore::NoteFilter.new
+          filter.words = conf
+
+          spec = ::Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+          spec.includeTitle = true
+          spec.includeTagGuids = true
+          spec.includeContentLength = true
+          spec.includeCreated = true
+          spec.includeUpdated = true
+
+          result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
+
+          @entity = result.notes.detect { |note| note.title == name }
+
+          self if @entity
+        end
+
+        #
         # https://stackoverflow.com/questions/46694930/evernoteedamnotestorenoteresultspec-is-not-defined
         # http://www.rubydoc.info/gems/evernote-thrift/Evernote%2FEDAM%2FNoteStore%2FNoteStore%2FClient%3AgetNote
         # @since 0.2.0
