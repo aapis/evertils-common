@@ -110,7 +110,7 @@ module Evertils
         #
         # @since 0.3.13
         def find_with(conf)
-          return unless conf.is_a?(Hash)
+          return unless conf.is_a?(Array)
 
           @entity = nil
 
