@@ -126,7 +126,7 @@ module Evertils
 
           result = @evernote.call(:findNotesMetadata, filter, 0, 10, spec)
 
-          @entity = result.notes.detect { |note| note.title == name }
+          @entity = result.notes.first
 
           self if @entity
         end
