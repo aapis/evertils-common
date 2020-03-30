@@ -148,6 +148,20 @@ module Evertils
         end
 
         #
+        # @since 0.3.17
+        def find_note_with_contents_using_grammar(grammar)
+          find_result = find_with(grammar)
+
+          return if find_result.nil?
+
+          guid = find_result.entity.guid
+          result = @evernote.call(:getNote, guid, true, false, false, false)
+          @entity = result
+
+          self if @entity
+        end
+
+        #
         # @since 0.3.0
         def tag(*guids)
           guids = guids.map(&:to_s)
